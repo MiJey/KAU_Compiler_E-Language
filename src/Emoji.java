@@ -1,5 +1,12 @@
-/** ASCII 코드 대응 이모지 
- * static final로 선언해놓았으므로 Emoji.exclamation <-- 이런식으로 쓰면 된다. **/
+/**
+ * ASCII 코드 대응 이모지
+ * 
+ * 깨질까봐 unicode escape 문자를 사용하였으며
+ * Java에서 5-digit 유니코드를 escape 문자로 표현할 수 없어서 Surrogate Pair로 작성하였다.
+ * static final로 선언해놓았으므로 Emoji.exclamation <-- 이런식으로 쓰면 된다.
+ * 
+ * @author Moon Yeji
+ */
 public class Emoji {
 	// ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
 	public static final String exclamation		= "\u2757";			// ❗️
