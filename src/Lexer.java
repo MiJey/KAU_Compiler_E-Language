@@ -6,57 +6,48 @@ import java.text.Normalizer;
  * E-Language에서 알파벳에 해당되는 이모지를 읽기 위해 유니코드를 읽은 후 조합합니다.
  * 조합해서 나온 이모지에 해당하는 토큰을 반환합니다.
  * 
- * 1. 유니코드 또는 white space(공백, 탭, 개행)를 한 개 읽는다. (nextUnicode)
+ * 1. 유니코드를 한 개 읽는다. (nextUnicode)
  * 2. 읽은 유니코드를 1~2개 조합하여 이모지로 변환한다. (nextEmoji)
  * 3. 이모지에 해당하는 토큰을 반환한다. (next)
  * 
  * @author Moon Yeji
  */
 public class Lexer {
+	private BufferedReader input;
+	private Emoji emoji = new Emoji();
+	private String line = "";
+	private int lineno = 0;
+	private int col = 0;
+    
+	private final int NUL = 0x0000;	// 널
+	private final int SP  = 0x0020;	// 공백
+	private final int EOF = 0x0004;	// 파일 끝
+	private final int TAB = 0x0009;	// 탭
+	private final int LF  = 0x000A;	// 개행
+	private final int BOM = 0xFEFF;	// 해당 텍스트가 유니코드임을 나타내는 문자이며, 옵션이므로 모든 유니코드 텍스트에서 나타나는 것은 아님
+	private int uni = SP;
 
-    private BufferedReader input;
-    
-    private String line = "\n";
-    private int lineno = 0;
-    private int col = 0;
-    private boolean isEof = false;
-    
-    private final int EOL = 0x000A;
-    private final int EOF = 0x0004;
-    private final int BOM = 0xFEFF;
-    private int uni = 0x0020;	// 맨 처음에 공백을 넣어둠
-    
-    
-    private char ch = ' ';
-    private String st = "\n\n";
-    private final String letters = "🍏🍌🥕💎🐘🖕👓🍔👁🍹🤴💋🌙📒🍊🍑👸🌈🐍🚕☂️✌️🌍🎅⛵️💤";
-    private final String digits = "🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘";
-    private final char eolnCh = '\n';
-    private final char eofCh = '\004';
-    
-
-    public Lexer (String fileName) {
-        try {
-            input = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),"UTF-8"));
-        	line = input.readLine();
-        	
-        	// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
-        	if (line.codePointAt(0) == BOM)
-        		line = line.substring(1, line.length());
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + fileName);
-            System.exit(1);
-        } catch (UnsupportedEncodingException e) {
-        	System.out.println("FileNotFoundException: " + e);
-            System.exit(1);
-        } catch (IOException e) {
-        	System.out.println("IOException: " + e);
-            System.exit(1);
+	public Lexer (String fileName) {
+		try {
+			input = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
+			line = input.readLine();
+			
+			// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
+			if (line.codePointAt(0) == BOM)
+				line = line.substring(1, line.length());
+		} catch (FileNotFoundException e) {
+			System.out.println("Lexer: FileNotFoundException: " + fileName);
+			System.exit(1);
+		} catch (UnsupportedEncodingException e) {
+			System.out.println("Lexer: UnsupportedEncodingException: " + e);
+			System.exit(1);
+		} catch (IOException e) {
+			System.out.println("Lexer: IOException: " + e);
+			System.exit(1);
 		}
-    }
+	}
     
-    // 유니코드를 한 개 읽는 함수(nextChar와 동일한 기능)
-    private int nextUnicode() {
+	private int nextUnicode() {
     	if (uni == EOF)
     		error("Attempt to read past end of file");
     	
@@ -67,30 +58,62 @@ public class Lexer {
     		try {
     			line = input.readLine();
     		} catch (IOException e) {
-    			System.err.println("nextUnicode() readLine error: " + e);
+    			System.err.println("nextUnicode(): readLine error: " + e);
     			System.exit(1);
     		}
     		
     		if (line == null) {
-    			line = "" + (char)EOL;
+    			line = "" + (char)LF;
     		} else {
     			System.out.printf("line %3d: %s", lineno, line);
     			lineno++;
-    			line += (char)EOL;
+    			line += (char)LF;
     		}
     		
     		col = 0;
     	}
     	
-    	return line.codePointAt(col);
+    	return (int)line.charAt(col);
+    }
+	
+	private Emoji nextEmoji() {
+		int a = emoji.findEmoji(new int[] {0xFE0F});
+		System.out.println("a: " + a);
+		return Emoji.A;
+	}
+	
+	public Token next() {
+		return Token.andTok;
+	}
+    
+	private void check(int u) {
+        uni = nextUnicode();
+        if (uni != u) {
+        	error("Illegal character, expecting " + (char)uni + (char)u);
+        }
+            
+        uni = nextUnicode();
+    }
+
+    public void error (String msg) {
+        System.err.print(line);
+        System.err.println("Error: column " + col + " " + msg);
+        System.exit(1);
     }
     
-    private String nextEmoji() {
-    	return Emoji.A;
-    }
     
+    
+	
+	
+	private boolean isEof = false;
+	private char ch = ' ';
+	private String st = "\n\n";
+	private final String letters = "🍏🍌🥕💎🐘🖕👓🍔👁🍹🤴💋🌙📒🍊🍑👸🌈🐍🚕☂️✌️🌍🎅⛵️💤";
+	private final String digits = "🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘";
+	private final char eolnCh = '\n';
+	private final char eofCh = '\004';
     //nextemoji() : col과 st를 한 칸 밀고 밀기 전 이모지를 리턴한다
-    private String nextEmoji2() { // Return next emoji
+	private String nextEmoji2() { // Return next emoji
 
         if (st.contains(""+eofCh))
             error("Attempt to read past end of file");
@@ -152,7 +175,7 @@ public class Lexer {
     }
     
 
-    public Token next( ) { // Return next token
+    public Token next22( ) { // Return next token
         do {
         	if(st.contains(""+eofCh))
         		return Token.eofTok;
@@ -279,7 +302,7 @@ public class Lexer {
     } // next
 
 
-    private boolean isLetter(String s) {
+	private boolean isLetter(String s) {
         
     	if(letters.indexOf(s)==-1)
         {
@@ -296,19 +319,14 @@ public class Lexer {
         	return true;
     }
   
-    private boolean isDigit(char c) {
+	private boolean isDigit(char c) {
         return ('0' <= c && c <= '9');  // lee add code
     }
 
-//    private void check(char c) {
-//        ch = nextChar();
-//        if (ch != c) 
-//            error("Illegal character, expecting " + c);
-//        ch = nextChar();
-//    }
+
 //
 //    //lee add code
-//    private Token chkOpt(char c, Token one, Token two) {
+//	private Token chkOpt(char c, Token one, Token two) {
 //    	ch = nextChar();
 //	    if(ch == c) {
 //	    	ch = nextChar();
@@ -322,7 +340,7 @@ public class Lexer {
 
 //ch를 set에 있는 문자들로만 이루어진 토큰으로 자르고(set 에 없는 문자가 나올 때 까지) 그 토큰을 리턴.
     //emoji전용으로 수정.
-    private String concat(String set) {//identifyer를 판별할 떄 버그 존재.
+	private String concat(String set) {//identifyer를 판별할 떄 버그 존재.
         String r = "";
         do {
         	if(letters.contains(st)) { //문자일때 예외처리 다음 글자가 숫자면 charAt함수로 한 글자를 읽고 아니라면 substring으로 두 글자를 읽어야 한다.
@@ -351,43 +369,56 @@ public class Lexer {
         	st = line.substring(col, col+2);
         return r;
     }
+	
 
-    public void error (String msg) {
-        System.err.print(line);
-        System.err.println("Error: column " + col + " " + msg);
-        System.exit(1);
-    }
     
     //===========================
-    private static void printIt(String string) {
+	private static void printIt(String string) {
         System.out.println(string);
         for (int i = 0; i < string.length(); i++) {
             System.out.print(String.format("U+%04X ", string.codePointAt(i)));
         }
         System.out.println();
     }
-    public static void test() {
-        String han = " \n";
-        
-        printIt(han);
+	
+	// 유니코드 이해를 돕기 위한 테스트 코드
+	public static void test() {
+		System.out.printf("🍏 \uD83C\uDF4F %s %s \n", Emoji.a, ("" + (char)0xD83C + (char)0xDF4F));
+				
+		String str = Emoji.a + " " + Emoji.b + " " + Emoji.c + " " + Emoji.d;	// "🍏 🍌 🥕 💎"
+		System.out.println(str);
+		
+		for (int i = 0; i < str.length(); i++)
+			System.out.print(String.format("U+%04X ", str.codePointAt(i)));
+		System.out.println();
 
-        String nfd = Normalizer.normalize(han, Normalizer.Form.NFD);
-        printIt(nfd);
+		for (int i = 0; i < str.length(); i++)
+			System.out.print(String.format("\\u%04X", (int)str.charAt(i)));
+		System.out.println();
+		
+		for (int i = 0; i < str.length(); i++) {
+			int c = (int)str.charAt(i);
+			if (c == 0x0020)	// 공백 \u0020
+				System.out.printf(" ");
+			else
+				System.out.print(String.format("\\u%04X", (int)str.charAt(i)));
+		}
+		
+		System.out.println("\nend test");
+	}
 
-        String nfc = Normalizer.normalize(nfd, Normalizer.Form.NFC);
-        printIt(nfc);
-    }
-
-    static public void main (String[] argv) {
-        Lexer lexer = new Lexer(argv[0]);
-        lexer.nextUnicode();
-//        Token tok = lexer.next( );
-//        while (tok != Token.eofTok) {
-//            System.out.println(tok.toString());
-//            tok = lexer.next( );
-//        }
-    }
-    
-
+	static public void main (String[] argv) {
+		test();
+		
+		Lexer lexer = new Lexer(argv[0]);
+		lexer.nextEmoji();
+		//lexer.nextUnicode();
+		
+//      Token tok = lexer.next( );
+//      while (tok != Token.eofTok) {
+//          System.out.println(tok.toString());
+//          tok = lexer.next( );
+//      }
+	}
 }
 
