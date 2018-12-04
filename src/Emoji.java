@@ -8,6 +8,10 @@ import java.util.ArrayList;
  * @author Moon Yeji
  */
 public class Emoji {
+	// 다음 유니코드를 읽으라는 의미의 특수 이모지
+	public static final Emoji next = new Emoji("next", new int[] {});
+	
+	// white spaces
 	public static final Emoji space   = new Emoji(" ",  new int[] { 0x0020 });
 	public static final Emoji tab     = new Emoji("\t", new int[] { 0x0009 });
 	public static final Emoji newline = new Emoji("\n", new int[] { 0x000A });
@@ -116,33 +120,11 @@ public class Emoji {
 	
 	// Emoji class
 	private String emoji;
-	private int unicodes[];
-	private ArrayList<Emoji> emojies = new ArrayList<Emoji>();
-	
-	public Emoji() {}
+	public int unicodes[];
 	
 	private Emoji(String e, int u[]) {
 		emoji = e;
 		unicodes = u;
-		emojies.add(this);
-	}
-	
-	// 주어진 배열과 n번째까지 일치하는 이모지가 있는지 확인, n 반환
-	// 0인 경우: 그런 이모지 없음
-	// length와 같은 경우: 해당 이모지
-	// 그 사이: nextUnicode()로 읽었을 때 가능성 있음
-	public int findEmoji(int unicodes[]) {
-		int m = 0;
-		for (int i = 0; i < emojies.size(); i++) {	// 모든 이모지 확인
-			int codes[] = emojies.get(i).unicodes;
-			int n = 0;
-			for (int j = 0; j < codes.length; j++) {	// 해당 이모지의 unicodes 확인
-				if (unicodes[j] != codes[j]) break;
-				n++;
-			}
-			if (m < n) m = n;
-		}
-		return m;
 	}
 	
 	public String toString() {

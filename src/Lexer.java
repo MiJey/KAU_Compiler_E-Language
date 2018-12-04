@@ -14,27 +14,24 @@ import java.text.Normalizer;
  */
 public class Lexer {
 	private BufferedReader input;
-	private Emoji emoji = new Emoji();
-	private String line = "";
-	private int lineno = 0;
-	private int col = 0;
-    
+	private EmojiHelper emojiHelper = new EmojiHelper();
+
 	private final int NUL = 0x0000;	// 널
 	private final int SP  = 0x0020;	// 공백
 	private final int EOF = 0x0004;	// 파일 끝
 	private final int TAB = 0x0009;	// 탭
 	private final int LF  = 0x000A;	// 개행
 	private final int BOM = 0xFEFF;	// 해당 텍스트가 유니코드임을 나타내는 문자이며, 옵션이므로 모든 유니코드 텍스트에서 나타나는 것은 아님
-	private int uni = SP;
+	
+	private int unicodes[] = new int[] {};
+	private int uni = NUL;
+	private String line = "";
+	private int lineno = 0;
+	private int col = 1;
 
 	public Lexer (String fileName) {
 		try {
 			input = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
-			line = input.readLine();
-			
-			// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
-			if (line.codePointAt(0) == BOM)
-				line = line.substring(1, line.length());
 		} catch (FileNotFoundException e) {
 			System.out.println("Lexer: FileNotFoundException: " + fileName);
 			System.exit(1);
@@ -53,10 +50,13 @@ public class Lexer {
     	
     	col++;
     	
-    	System.out.printf("col: %d, line.length: %d\n", col, line.length());
     	if (col >= line.length()) {
     		try {
     			line = input.readLine();
+    			
+    			// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
+    			if (line.codePointAt(0) == BOM)
+    				line = line.substring(1, line.length());
     		} catch (IOException e) {
     			System.err.println("nextUnicode(): readLine error: " + e);
     			System.exit(1);
@@ -65,7 +65,7 @@ public class Lexer {
     		if (line == null) {
     			line = "" + (char)LF;
     		} else {
-    			System.out.printf("line %3d: %s", lineno, line);
+    			//System.out.printf("line %3d: %s", lineno, line);
     			lineno++;
     			line += (char)LF;
     		}
@@ -73,31 +73,53 @@ public class Lexer {
     		col = 0;
     	}
     	
-    	return (int)line.charAt(col);
+    	uni = (int)line.charAt(col);
+    	return uni;
     }
 	
 	private Emoji nextEmoji() {
-		int a = emoji.findEmoji(new int[] {0xFE0F});
-		System.out.println("a: " + a);
-		return Emoji.A;
+System.out.printf("nextEmoji() unicodes: ");
+		int temp[] = new int[unicodes.length + 1];
+		
+		for (int i = 0; i < unicodes.length; i++)
+			temp[i] = unicodes[i];
+		
+		temp[unicodes.length] = nextUnicode();
+		unicodes = temp;
+		
+for (int i = 0; i < unicodes.length; i++)
+	System.out.printf("%04X ", unicodes[i]);
+System.out.println();
+		Emoji next = emojiHelper.findEmoji(unicodes);
+		
+		if (next == null) {
+			error("nextEmoji: findEmoji returns null, Illegal character");
+		} else if (next == Emoji.next) {
+			nextEmoji();
+		}
+		
+		System.out.println(next.toString());
+		uni = NUL;
+		unicodes = new int[] {};
+		return next;
 	}
 	
 	public Token next() {
 		return Token.andTok;
 	}
-    
-	private void check(int u) {
-        uni = nextUnicode();
-        if (uni != u) {
-        	error("Illegal character, expecting " + (char)uni + (char)u);
-        }
-            
-        uni = nextUnicode();
-    }
+//    
+//	private void check(int u) {
+//        uni = nextUnicode();
+//        if (uni != u) {
+//        	error("Illegal character, expecting " + (char)uni + (char)u);
+//        }
+//            
+//        uni = nextUnicode();
+//    }
 
     public void error (String msg) {
-        System.err.print(line);
-        System.err.println("Error: column " + col + " " + msg);
+        System.err.println(line);
+        System.err.printf("Error(line %d, column %d): %s\n", lineno, col, msg);
         System.exit(1);
     }
     
@@ -408,7 +430,7 @@ public class Lexer {
 	}
 
 	static public void main (String[] argv) {
-		test();
+		//test();
 		
 		Lexer lexer = new Lexer(argv[0]);
 		lexer.nextEmoji();
