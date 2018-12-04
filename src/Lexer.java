@@ -25,6 +25,7 @@ public class Lexer {
 	
 	private int unicodes[] = new int[] {};
 	private int uni = NUL;
+	private Emoji emo = Emoji.next;	// 초기값으로 다음 문자를 읽으라는 의미의 특수 이모지
 	private String line = "";
 	private int lineno = 0;
 	private int col = 1;
@@ -65,7 +66,7 @@ public class Lexer {
     		if (line == null) {
     			line = "" + (char)LF;
     		} else {
-    			//System.out.printf("line %3d: %s", lineno, line);
+    			System.out.printf("line %3d: %s\n", lineno, line);
     			lineno++;
     			line += (char)LF;
     		}
@@ -78,7 +79,6 @@ public class Lexer {
     }
 	
 	private Emoji nextEmoji() {
-System.out.printf("nextEmoji() unicodes: ");
 		int temp[] = new int[unicodes.length + 1];
 		
 		for (int i = 0; i < unicodes.length; i++)
@@ -87,35 +87,105 @@ System.out.printf("nextEmoji() unicodes: ");
 		temp[unicodes.length] = nextUnicode();
 		unicodes = temp;
 		
-for (int i = 0; i < unicodes.length; i++)
-	System.out.printf("%04X ", unicodes[i]);
-System.out.println();
 		Emoji next = emojiHelper.findEmoji(unicodes);
 		
 		if (next == null) {
 			error("nextEmoji: findEmoji returns null, Illegal character");
 		} else if (next == Emoji.next) {
 			nextEmoji();
+			return null;
 		}
 		
-		System.out.println(next.toString());
+System.out.println("next Emoji: " + next.toString());
 		uni = NUL;
 		unicodes = new int[] {};
-		return next;
+		emo = next;
+		return emo;
+	}
+	
+
+	
+	// 연속되는 문자열 찾기(Identifier, Keyword)
+	public String concatLetters() {
+		String r = "";
+		do {
+			r += emo;
+			nextEmoji();
+		} while (emojiHelper.isLetter(emo));
+		return r;
+	}
+	
+	// 연속되는 숫자 찾기(IntLiteral, FloatLiteral)
+	public String concatDigits() {
+		String r = "";
+		do {
+			r += emo;
+			nextEmoji();
+		} while (emojiHelper.isDigit(emo));
+		return r;
+	}
+	
+	// 공백 4개는 탭으로 전환, 4개 미만의 공백은 1개로 합침
+	public Emoji concatSpaces() {
+		int cnt = 0;
+		do {
+			cnt++;
+			nextEmoji();
+		} while (emo == Emoji.space && cnt < 4);
+		
+		if (cnt == 4)
+			return Emoji.tab;
+		return Emoji.space;
 	}
 	
 	public Token next() {
-		return Token.andTok;
+		if (emo == Emoji.next) nextEmoji();
+		while (true) {
+			if(emo == Emoji.eof) {
+				return Token.eofTok;
+			} else if (emojiHelper.isLetter(emo)) {
+				// Identifier, Keyword
+				return Token.keyword(concatLetters());
+			} else if (emojiHelper.isDigit(emo)) {
+				String number = concatDigits();
+				
+				// IntLiteral
+				if (emo != Emoji.period)
+					return Token.mkIntLiteral(number);
+				
+				// FloatLiteral
+				number += concatDigits();
+				return Token.mkFloatLiteral(number);
+			} else {
+				// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
+				if (emo == Emoji.space) {
+					Emoji ws = concatSpaces();
+					if (ws == Emoji.space)
+						return Token.spaceTok;
+					else if (ws == Emoji.tab)
+						return Token.tabTok;
+				} else if (emo == Emoji.tab) {
+					return Token.tabTok;
+				} else if (emo == Emoji.slash) {
+					
+				} else if (emo == Emoji.exclamation) {
+					
+				}
+				
+				error("next() Illigal character");
+			}
+			
+		}
 	}
-//    
-//	private void check(int u) {
-//        uni = nextUnicode();
-//        if (uni != u) {
-//        	error("Illegal character, expecting " + (char)uni + (char)u);
-//        }
-//            
-//        uni = nextUnicode();
-//    }
+	
+	private void check(Emoji e) {
+        nextEmoji();
+        if (emo != e) {
+        	error("Illegal character, expecting " + e.toString());
+        }
+            
+        nextEmoji();
+    }
 
     public void error (String msg) {
         System.err.println(line);
@@ -123,286 +193,6 @@ System.out.println();
         System.exit(1);
     }
     
-    
-    
-	
-	
-	private boolean isEof = false;
-	private char ch = ' ';
-	private String st = "\n\n";
-	private final String letters = "🍏🍌🥕💎🐘🖕👓🍔👁🍹🤴💋🌙📒🍊🍑👸🌈🐍🚕☂️✌️🌍🎅⛵️💤";
-	private final String digits = "🕛🕐🕑🕒🕓🕔🕕🕖🕗🕘";
-	private final char eolnCh = '\n';
-	private final char eofCh = '\004';
-    //nextemoji() : col과 st를 한 칸 밀고 밀기 전 이모지를 리턴한다
-	private String nextEmoji2() { // Return next emoji
-
-        if (st.contains(""+eofCh))
-            error("Attempt to read past end of file");
-    	if(st.equals("  "))//tab키는 길이가 4
-    		col+=2;
-    	if(line.length()==0) {
-            try {
-                line = input.readLine( );
-                if(line.charAt(0) == '﻿')//파일 처음에 읽히는 보이지 않는 문자 처리
-                	line = line.substring(1, line.length());
-            } catch (IOException e) {
-                System.err.println(e);
-                System.exit(1);
-            } // try
-            if (line == null) // at end of file
-                line = "" + eofCh;
-            else {
-                System.out.println("\nline " + lineno + "\t:\t" + line);
-                lineno++;
-                line += eolnCh;
-                line += eolnCh;
-                line += eolnCh;
-            } // if line
-            col = 0;
-    		return line.substring(col,col+2);
-    	}
-        if (st.indexOf(eofCh) != -1)
-            error("Attempt to read past end of file");
-        else {
-	        col = col+2;
-	        if (line.charAt(col) == eolnCh) {
-	            try {
-	                line = input.readLine( );
-	                if(line!=null)
-	                	if(line.charAt(0) == '﻿')//파일 처음에 읽히는 보이지 않는 문자 처리//null이 아닐 때만 실행해야함.
-	                		line = line.substring(1, line.length()-1);
-	            } catch (IOException e) {
-	                System.err.println(e);
-	                System.exit(1);
-	            } // try
-	            if (line == null) // at end of file
-	            	return eofCh+"";
-//	                line = "" + eofCh;
-	            	
-	            else {
-	                System.out.println("\nline " + lineno + "\t:\t" + line);
-	                lineno++;
-	                line += eolnCh;
-	                line += eolnCh;
-	                line += eolnCh;
-	            } // if line
-	            col = 0;
-	        } // if col
-	        
-//	        col = col+2;
-	        return line.substring(col,col+2);
-        }
-        return null;
-    }
-    
-
-    public Token next22( ) { // Return next token
-        do {
-        	if(st.contains(""+eofCh))
-        		return Token.eofTok;
-            if (isLetter(st)) { // ident or keyword
-                String spelling = concat(letters + digits);
-                return Token.keyword(spelling);
-            } else if (isDigit(st.charAt(0))) { // int or float literal
-                String number = concat(digits);
-                if (st.charAt(0) != '.')  // int Literal
-                    return Token.mkIntLiteral(number);
-                number += concat(digits);
-                return Token.mkFloatLiteral(number);
-            } else {            	
-            	switch (st.charAt(0)) {
-            
-            		case '\t': case '\r':			//안보이는 글자들 처리
-            			error("\t not allowed");
-            		case eolnCh:
-            		st = nextEmoji2();
-            		return Token.eol;
-            		
-            		default:
-            			switch(st) {
-                    	case "  "://tab tok
-                    		st = nextEmoji2();
-                    		return Token.tabTok;
-                    	case "📈":
-                    		st = nextEmoji2();
-        	        		return Token.leftBracketTok;
-                    	case "📉":
-                    		st = nextEmoji2();
-        	        		return Token.rightBracketTok;
-                    		
-                    	case "💬":
-                    		st = nextEmoji2();
-        	        		return Token.commaTok;
-                    		
-                    	case "👈":
-                    		st = nextEmoji2();
-        	        		return Token.assignTok;
-                    		
-                    	case "🔄":
-                    		st = nextEmoji2();
-        	        		return Token.whileTok;
-                    		
-                    	case "📺":
-                    		st = nextEmoji2();
-        	        		return Token.printTok;
-                    		
-                    	case "➖":
-                    		st = nextEmoji2();
-                    		return Token.minusTok;
-
-                    	case "➕":
-                    		st = nextEmoji2();
-        	        		return Token.plusTok;
-                    		
-                    	case "🧗":
-                    		st = nextEmoji2();
-                    		return Token.gtTok;
-
-                    	case "🏄":
-                    		st = nextEmoji2();
-                    		return Token.ltTok;
-
-                    	case "🤔":
-                    		st = nextEmoji2();
-                    		return Token.ifTok;
-
-                    	case "🙅":
-                    		st = nextEmoji2();
-                    		return Token.falseTok;
-                    	
-                    	case "🙆":
-                    		st = nextEmoji2();
-                    		return Token.trueTok;
-                    	
-                    	case "📖":
-                    		st = nextEmoji2();
-                    		return Token.leftParenTok;
-                    		
-                    	case "📕":
-                    		st = nextEmoji2();
-                    		return Token.rightParenTok;
-
-                    	case "⚖️":
-                    		st = nextEmoji2();
-                    		return Token.eqeqTok;
-
-                    	case "🥜":
-                    		st = nextEmoji2();
-                    		return Token.notTok;
-
-                    	case "🐇":
-                    		st = nextEmoji2();
-                    		return Token.multiplyTok;
-
-                    	case "✂️":
-                    		st = nextEmoji2();
-                    		return Token.divideTok;
-
-                    	case "👫":
-                    		st = nextEmoji2();
-                    		return Token.andTok;
-
-                    	case "🤷":
-                    		st = nextEmoji2();
-                    		return Token.orTok;
-
-                    	case " "://띄어쓰기를 콤마로 사용.
-//                    		st = nextEmoji();//col++하고 st 2글자만큼 읽어도 될거같은데 , 다음에는 문장 끝날 일이 없음.
-                    		col++;
-                    		st = line.substring(col,col+2);
-                    		return Token.commaTok;
-                    	default:
-                    		st = nextEmoji2();
-                    		return Token.errTok;
-                    	}
-            			
-            	}
-            	
-            }// switch
-        } while (true);
-    } // next
-
-
-	private boolean isLetter(String s) {
-        
-    	if(letters.indexOf(s)==-1)
-        {
-    		
-//    		System.out.println("#debug1🍏🍏");
-//    		System.out.println(String.valueOf("🍏".length()));
-//    		System.out.println(String.valueOf("a".length()));
-//    		System.out.println("strin" + 'g');
-//    		System.out.println(c);
-        	
-        	return false;
-        }
-        else
-        	return true;
-    }
-  
-	private boolean isDigit(char c) {
-        return ('0' <= c && c <= '9');  // lee add code
-    }
-
-
-//
-//    //lee add code
-//	private Token chkOpt(char c, Token one, Token two) {
-//    	ch = nextChar();
-//	    if(ch == c) {
-//	    	ch = nextChar();
-//	    	return two;
-//	    }
-//	    return one;
-//    }
-        
-        
-// student exercise
-
-//ch를 set에 있는 문자들로만 이루어진 토큰으로 자르고(set 에 없는 문자가 나올 때 까지) 그 토큰을 리턴.
-    //emoji전용으로 수정.
-	private String concat(String set) {//identifyer를 판별할 떄 버그 존재.
-        String r = "";
-        do {
-        	if(letters.contains(st)) { //문자일때 예외처리 다음 글자가 숫자면 charAt함수로 한 글자를 읽고 아니라면 substring으로 두 글자를 읽어야 한다.
-                r += st;
-                col += 2;
-                if(isDigit(line.charAt(col))) {	//다음 글자가 숫자면 charAt함수로 한 글자를 읽고 아니라면 substring으로 두 글자를 읽어야 한다.
-    	            st = "" + line.charAt(col);
-                }else if(letters.contains(line.substring(col,col+2))) {
-                	st = line.substring(col,col+2);
-                }else {            	
-                	st = line.substring(col,col+2);
-                }
-        	} else {
-	            r += st.charAt(0);
-	            col++;
-                if(isDigit(line.charAt(col)) || (line.charAt(col)==' ')) {//다음 글자가 숫자면 charAt함수로 한 글자를 읽고 아니라면 substring으로 두 글자를 읽어야 한다.
-    	            st = "" + line.charAt(col);                	
-                }else if(letters.contains(line.substring(col,col+2))) {                
-                	st = line.substring(col,col+2);
-                }else {
-                	st = line.substring(col,col+2);
-                }
-        	}
-        } while (set.contains(st));
-        if(st.charAt(0) != ' ')//뭐떄문에 예외처리했더라
-        	st = line.substring(col, col+2);
-        return r;
-    }
-	
-
-    
-    //===========================
-	private static void printIt(String string) {
-        System.out.println(string);
-        for (int i = 0; i < string.length(); i++) {
-            System.out.print(String.format("U+%04X ", string.codePointAt(i)));
-        }
-        System.out.println();
-    }
-	
 	// 유니코드 이해를 돕기 위한 테스트 코드
 	public static void test() {
 		System.out.printf("🍏 \uD83C\uDF4F %s %s \n", Emoji.a, ("" + (char)0xD83C + (char)0xDF4F));
@@ -430,17 +220,14 @@ System.out.println();
 	}
 
 	static public void main (String[] argv) {
-		//test();
-		
+		// test();
 		Lexer lexer = new Lexer(argv[0]);
-		lexer.nextEmoji();
-		//lexer.nextUnicode();
+		Token tok = lexer.next( );
 		
-//      Token tok = lexer.next( );
-//      while (tok != Token.eofTok) {
-//          System.out.println(tok.toString());
-//          tok = lexer.next( );
-//      }
+		while (tok != Token.eofTok) {
+			System.out.println(tok.toString());
+			tok = lexer.next();
+		}
 	}
 }
 

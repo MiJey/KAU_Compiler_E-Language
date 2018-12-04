@@ -5,6 +5,7 @@
     private static final String[] reserved = new String[KEYWORDS];
     private static Token[] token = new Token[KEYWORDS];
 
+    
     public static final Token eofTok = new Token(TokenType.Eof, "<<EOF>>");
     public static final Token elseTok = new Token(TokenType.Else, "\uD83D\uDE1E");	// 😞
     public static final Token falseTok = new Token(TokenType.False, "🙅");
@@ -34,7 +35,8 @@
     public static final Token andTok = new Token(TokenType.And, "👫");
     public static final Token orTok = new Token(TokenType.Or, "🤷");
     //lee add code
-    public static final Token tabTok = new Token(TokenType.Tab, "    ");
+    public static final Token spaceTok = new Token(TokenType.Space, "<<SP>>");
+    public static final Token tabTok = new Token(TokenType.Tab, "<<TAB>>");
     public static final Token printTok = new Token(TokenType.Print, "📺");
     public static final Token eol = new Token(TokenType.Eol, "\\n");
     

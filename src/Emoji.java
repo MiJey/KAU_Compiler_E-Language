@@ -9,12 +9,16 @@ import java.util.ArrayList;
  */
 public class Emoji {
 	// 다음 유니코드를 읽으라는 의미의 특수 이모지
-	public static final Emoji next = new Emoji("next", new int[] {});
+	public static final Emoji next = new Emoji("<NEXT>", new int[] {});
+	public static final Emoji eof  = new Emoji("<EOF>",  new int[] { 0x0004 });
 	
 	// white spaces
-	public static final Emoji space   = new Emoji(" ",  new int[] { 0x0020 });
-	public static final Emoji tab     = new Emoji("\t", new int[] { 0x0009 });
-	public static final Emoji newline = new Emoji("\n", new int[] { 0x000A });
+	public static final Emoji space   = new Emoji("<SP>",  new int[] { 0x0020 });
+	public static final Emoji tab     = new Emoji("<TAB>", new int[] { 0x0009 });
+	public static final Emoji newline = new Emoji("<LF>",  new int[] { 0x000A });
+	
+	// functions
+	public static final Emoji print = new Emoji("\uD83D\uDCFA", new int[] { 0xD83D, 0xDCFA });	// 📺
 	
 	// ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
 	public static final Emoji exclamation      = new Emoji("\u2757\uFE0F", new int[] { 0x2757, 0xFE0F }); // ❗️
