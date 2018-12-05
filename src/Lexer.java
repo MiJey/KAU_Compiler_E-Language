@@ -56,7 +56,7 @@ public class Lexer {
     			line = input.readLine();
     			
     			// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
-    			if (line.codePointAt(0) == BOM)
+    			if (line != null && line.codePointAt(0) == BOM)
     				line = line.substring(1, line.length());
     		} catch (IOException e) {
     			System.err.println("nextUnicode(): readLine error: " + e);
@@ -96,7 +96,7 @@ public class Lexer {
 			return null;
 		}
 		
-System.out.println("next Emoji: " + next.toString());
+		// System.out.println("next Emoji: " + next.toString());
 		uni = NUL;
 		unicodes = new int[] {};
 		emo = next;
@@ -125,7 +125,18 @@ System.out.println("next Emoji: " + next.toString());
 		return r;
 	}
 	
-	// 공백 4개는 탭으로 전환, 4개 미만의 공백은 1개로 합침
+	public String concatString() {
+		String r = "";
+		nextEmoji();	// get "
+		while (emo != Emoji.stringEmoji) {
+			r += emo;
+			nextEmoji();
+		}
+		nextEmoji();	// get "
+		return r;
+	}
+	
+	// 공백 4개는 탭으로 전환, 4개 미만의 공백은 1개로 침
 	public Emoji concatSpaces() {
 		int cnt = 0;
 		do {
@@ -139,53 +150,133 @@ System.out.println("next Emoji: " + next.toString());
 	}
 	
 	public Token next() {
-		if (emo == Emoji.next) nextEmoji();
 		while (true) {
-			if(emo == Emoji.eof) {
-				return Token.eofTok;
-			} else if (emojiHelper.isLetter(emo)) {
-				// Identifier, Keyword
-				return Token.keyword(concatLetters());
-			} else if (emojiHelper.isDigit(emo)) {
-				String number = concatDigits();
-				
-				// IntLiteral
-				if (emo != Emoji.period)
-					return Token.mkIntLiteral(number);
-				
-				// FloatLiteral
-				number += concatDigits();
-				return Token.mkFloatLiteral(number);
-			} else {
-				// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
-				if (emo == Emoji.space) {
-					Emoji ws = concatSpaces();
-					if (ws == Emoji.space)
-						return Token.spaceTok;
-					else if (ws == Emoji.tab)
-						return Token.tabTok;
-				} else if (emo == Emoji.tab) {
-					return Token.tabTok;
-				} else if (emo == Emoji.slash) {
-					
-				} else if (emo == Emoji.exclamation) {
-					
-				}
-				
-				error("next() Illigal character");
+			if (emo == Emoji.next || emo == Emoji.newline) {
+				nextEmoji();
+				continue;
 			}
 			
+			// End of file
+			if(emo == Emoji.eof)
+				return Token.eofTok;
+
+			// Keywords
+			if (emo == Emoji.assignEmoji) {
+				nextEmoji();
+				return Token.assignTok;
+			} else if (emo == Emoji.ifEmoji) {
+				nextEmoji();
+				return Token.ifTok;
+			}
+			
+			// Identifier
+			if (emojiHelper.isLetter(emo))
+				return Token.keyword(concatLetters());
+			
+			// Digits
+			if (emojiHelper.isDigit(emo)) {
+				String number = concatDigits();
+				
+				// Integer
+				if (emo != Emoji.periodEmoji)
+					return Token.mkIntLiteral(number);
+				
+				// Float
+				number += concatDigits();
+				return Token.mkFloatLiteral(number);
+			}
+			
+			// String
+			if (emo == Emoji.stringEmoji)
+				return Token.mkStringLiteral(concatString());
+			
+			// Char
+			if (emo == Emoji.charEmoji) {
+				nextEmoji();	// get '
+				String temp;
+				if (emojiHelper.isAscii(emo)) {
+					temp = emo.toString();	// get char
+					nextEmoji();	// get '
+					if (emo == Emoji.charEmoji) {
+						nextEmoji();
+						return Token.mkCharLiteral(temp);
+					}
+				}
+			}
+			
+			// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
+			if (emo == Emoji.space) {
+				Emoji ws = concatSpaces();
+				if (ws == Emoji.space)
+					return Token.spaceTok;
+				else if (ws == Emoji.tab)
+					return Token.tabTok;
+			} else if (emo == Emoji.tab) {
+				nextEmoji();
+				return Token.tabTok;
+			}
+			
+			// 사칙연산
+			if (emo == Emoji.plusEmoji) {
+				nextEmoji();
+				return Token.plusTok;
+			} else if (emo == Emoji.minusEmoji) {
+				nextEmoji();
+				return Token.minusTok;
+			} else if (emo == Emoji.multiflyEmoji) {
+				nextEmoji();
+				return Token.multiplyTok;
+			} else if (emo == Emoji.divideEmoji) {
+				nextEmoji();
+				return Token.divideTok;
+			}
+			
+			
+			// 논리연산
+			else if (emo == Emoji.andEmoji) {
+				nextEmoji();
+				return Token.andTok;
+			} else if (emo == Emoji.orEmoji) {
+				nextEmoji();
+				return Token.orTok;
+			} else if (emo == Emoji.notEmoji) {
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji)
+					return Token.noteqTok;
+				return Token.notTok;
+			} else if (emo == Emoji.equal) {
+				nextEmoji();
+				return Token.eqTok;
+			} else if (emo == Emoji.greaterEmoji) { // 🙋 >
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji)
+					return Token.gteqTok;
+				return Token.gtTok;
+			} else if (emo == Emoji.lessEmoji) {	// 💁 <
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji)
+					return Token.lteqTok;
+				return Token.ltTok;
+			}
+			
+			// 괄호
+			else if (emo == Emoji.leftparenEmoji) {
+				nextEmoji();
+				return Token.leftParenTok;
+			} else if (emo == Emoji.rightparenEmoji) {
+				nextEmoji();
+				return Token.rightParenTok;
+			} else if (emo == Emoji.leftbracketEmoji) {
+				nextEmoji();
+				return Token.leftBracketTok;
+			} else if (emo == Emoji.rightbracketEmoji) {
+				nextEmoji();
+				return Token.rightBracketTok;
+			}
+
+			error("next() Illigal character: " + emo.toString());
 		}
 	}
-	
-	private void check(Emoji e) {
-        nextEmoji();
-        if (emo != e) {
-        	error("Illegal character, expecting " + e.toString());
-        }
-            
-        nextEmoji();
-    }
 
     public void error (String msg) {
         System.err.println(line);
@@ -225,7 +316,7 @@ System.out.println("next Emoji: " + next.toString());
 		Token tok = lexer.next( );
 		
 		while (tok != Token.eofTok) {
-			System.out.println(tok.toString());
+			System.out.println("\t" + tok.toString());
 			tok = lexer.next();
 		}
 	}

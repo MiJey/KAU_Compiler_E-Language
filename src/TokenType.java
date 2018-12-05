@@ -3,7 +3,7 @@
     True, False, And, Or, Assign, Comma,
     Not, Equals, NotEqual, Less, LessEqual, Greater, GreaterEqual,
     Plus, Minus, Multiply, Divide,
-    LeftBrace, RightBrace, LeftBracket, RightBracket, LeftParen, RightParen,
+    /*LeftBrace, RightBrace, */LeftBracket, RightBracket, LeftParen, RightParen,
     If, Else, While,
     Eof, Eol, Space, Tab, Err,
 

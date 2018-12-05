@@ -12,8 +12,8 @@
     public static final Token ifTok = new Token(TokenType.If, "🤔");
     public static final Token trueTok = new Token(TokenType.True, "🙆");
     public static final Token whileTok = new Token(TokenType.While, "🔄");
-    public static final Token leftBraceTok = new Token(TokenType.LeftBrace, "{");
-    public static final Token rightBraceTok = new Token(TokenType.RightBrace, "}");
+//    public static final Token leftBraceTok = new Token(TokenType.LeftBrace, "{");
+//    public static final Token rightBraceTok = new Token(TokenType.RightBrace, "}");
     public static final Token leftBracketTok = new Token(TokenType.LeftBracket, "📈");
     public static final Token rightBracketTok = new Token(TokenType.RightBracket, "📉");
     public static final Token leftParenTok = new Token(TokenType.LeftParen, "📖");
@@ -21,7 +21,7 @@
     public static final Token errTok = new Token(TokenType.Err, "!!");
     public static final Token commaTok = new Token(TokenType.Comma, "💬");
     public static final Token assignTok = new Token(TokenType.Assign, "👈");
-    public static final Token eqeqTok = new Token(TokenType.Equals, "⚖️");
+    public static final Token eqTok = new Token(TokenType.Equals, "⚖️");
     public static final Token ltTok = new Token(TokenType.Less, "<");
     public static final Token lteqTok = new Token(TokenType.LessEqual, "<⚖");
     public static final Token gtTok = new Token(TokenType.Greater, "🏄");
@@ -36,10 +36,9 @@
     public static final Token orTok = new Token(TokenType.Or, "🤷");
     //lee add code
     public static final Token spaceTok = new Token(TokenType.Space, "<<SP>>");
-    public static final Token tabTok = new Token(TokenType.Tab, "<<TAB>>");
+	public static final Token tabTok = new Token(TokenType.Tab, "<<TAB>>");
     public static final Token printTok = new Token(TokenType.Print, "📺");
     public static final Token eol = new Token(TokenType.Eol, "\\n");
-    
 
     private TokenType type;
     private String value = "";
@@ -80,6 +79,10 @@
 
     public static Token mkCharLiteral (String name) {
         return new Token(TokenType.CharLiteral, name);
+    }
+    
+    public static Token mkStringLiteral (String name) {
+    	return new Token (TokenType.StringLiteral, name);
     }
 
     public String toString ( ) {
