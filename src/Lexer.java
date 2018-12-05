@@ -24,7 +24,7 @@ public class Lexer {
 	private final int BOM = 0xFEFF;	// 해당 텍스트가 유니코드임을 나타내는 문자이며, 옵션이므로 모든 유니코드 텍스트에서 나타나는 것은 아님
 	
 	private int unicodes[] = new int[] {};
-	private int uni = NUL;
+	private int uni = 0;
 	private Emoji emo = Emoji.next;	// 초기값으로 다음 문자를 읽으라는 의미의 특수 이모지
 	private String line = "";
 	private int lineno = 0;
@@ -56,15 +56,15 @@ public class Lexer {
     			line = input.readLine();
     			
     			// 읽어온 텍스트 파일 맨 앞에 BOM(U+FEFF)이 있는 경우 잘라냄
-    			if (line != null && line.codePointAt(0) == BOM)
-    				line = line.substring(1, line.length());
+				if (line != null && line.length() != 0 && line.charAt(0) == BOM)
+					line = line.substring(1, line.length());
     		} catch (IOException e) {
     			System.err.println("nextUnicode(): readLine error: " + e);
     			System.exit(1);
     		}
     		
     		if (line == null) {
-    			line = "" + (char)LF;
+    			line = "" + (char)EOF;
     		} else {
     			System.out.printf("line %3d: %s\n", lineno, line);
     			lineno++;
@@ -73,17 +73,16 @@ public class Lexer {
     		
     		col = 0;
     	}
-    	
+
     	uni = (int)line.charAt(col);
     	return uni;
     }
 	
 	private Emoji nextEmoji() {
+		// 배열 크기를 하나 늘려서 복사
 		int temp[] = new int[unicodes.length + 1];
-		
 		for (int i = 0; i < unicodes.length; i++)
 			temp[i] = unicodes[i];
-		
 		temp[unicodes.length] = nextUnicode();
 		unicodes = temp;
 		
@@ -97,7 +96,7 @@ public class Lexer {
 		}
 		
 		// System.out.println("next Emoji: " + next.toString());
-		uni = NUL;
+		uni = 0;
 		unicodes = new int[] {};
 		emo = next;
 		return emo;
@@ -151,15 +150,15 @@ public class Lexer {
 	
 	public Token next() {
 		while (true) {
+			// End of file
+			if(emo == Emoji.eof)
+				return Token.eofTok;
+			
 			if (emo == Emoji.next || emo == Emoji.newline) {
 				nextEmoji();
 				continue;
 			}
 			
-			// End of file
-			if(emo == Emoji.eof)
-				return Token.eofTok;
-
 			// Keywords
 			if (emo == Emoji.assignEmoji) {
 				nextEmoji();
@@ -241,21 +240,28 @@ public class Lexer {
 				return Token.orTok;
 			} else if (emo == Emoji.notEmoji) {
 				nextEmoji();
-				if (emo == Emoji.equalsEmoji)
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
 					return Token.noteqTok;
+				}
 				return Token.notTok;
-			} else if (emo == Emoji.equal) {
+			} else if (emo == Emoji.equalsEmoji) {
 				nextEmoji();
 				return Token.eqTok;
 			} else if (emo == Emoji.greaterEmoji) { // 🙋 >
+				
 				nextEmoji();
-				if (emo == Emoji.equalsEmoji)
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
 					return Token.gteqTok;
+				}
 				return Token.gtTok;
 			} else if (emo == Emoji.lessEmoji) {	// 💁 <
 				nextEmoji();
-				if (emo == Emoji.equalsEmoji)
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
 					return Token.lteqTok;
+				}	
 				return Token.ltTok;
 			}
 			
@@ -286,7 +292,8 @@ public class Lexer {
     
 	// 유니코드 이해를 돕기 위한 테스트 코드
 	public static void test() {
-		System.out.printf("🍏 \uD83C\uDF4F %s %s \n", Emoji.a, ("" + (char)0xD83C + (char)0xDF4F));
+		System.out.println("======================Test======================");
+		System.out.printf("🍏 \uD83C\uDF4F %s %s \n", Emoji.a, "" + (char)0xD83C + (char)0xDF4F);
 				
 		String str = Emoji.a + " " + Emoji.b + " " + Emoji.c + " " + Emoji.d;	// "🍏 🍌 🥕 💎"
 		System.out.println(str);
@@ -306,8 +313,8 @@ public class Lexer {
 			else
 				System.out.print(String.format("\\u%04X", (int)str.charAt(i)));
 		}
-		
-		System.out.println("\nend test");
+
+		System.out.println("\n================================================");
 	}
 
 	static public void main (String[] argv) {
@@ -319,6 +326,7 @@ public class Lexer {
 			System.out.println("\t" + tok.toString());
 			tok = lexer.next();
 		}
+		System.out.println("Finish");
 	}
 }
 

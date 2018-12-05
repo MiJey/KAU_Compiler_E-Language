@@ -6,12 +6,12 @@
     private static Token[] token = new Token[KEYWORDS];
 
     
-    public static final Token eofTok = new Token(TokenType.Eof, "<<EOF>>");
-    public static final Token elseTok = new Token(TokenType.Else, "\uD83D\uDE1E");	// 😞
-    public static final Token falseTok = new Token(TokenType.False, "🙅");
-    public static final Token ifTok = new Token(TokenType.If, "🤔");
-    public static final Token trueTok = new Token(TokenType.True, "🙆");
-    public static final Token whileTok = new Token(TokenType.While, "🔄");
+    public static final Token eofTok = new Token(TokenType.Eof, Emoji.eof.toString());
+    public static final Token elseTok = new Token(TokenType.Else, Emoji.elseEmoji.toString());
+    public static final Token falseTok = new Token(TokenType.False, Emoji.falseEmoji.toString());
+    public static final Token ifTok = new Token(TokenType.If, Emoji.ifEmoji.toString());
+    public static final Token trueTok = new Token(TokenType.True, Emoji.trueEmoji.toString());
+    public static final Token whileTok = new Token(TokenType.While, Emoji.whileEmoji.toString());
 //    public static final Token leftBraceTok = new Token(TokenType.LeftBrace, "{");
 //    public static final Token rightBraceTok = new Token(TokenType.RightBrace, "}");
     public static final Token leftBracketTok = new Token(TokenType.LeftBracket, "📈");
@@ -24,8 +24,8 @@
     public static final Token eqTok = new Token(TokenType.Equals, "⚖️");
     public static final Token ltTok = new Token(TokenType.Less, "<");
     public static final Token lteqTok = new Token(TokenType.LessEqual, "<⚖");
-    public static final Token gtTok = new Token(TokenType.Greater, "🏄");
-    public static final Token gteqTok = new Token(TokenType.GreaterEqual, "🏄⚖");
+    public static final Token gtTok = new Token(TokenType.Greater, Emoji.greaterEmoji.toString());
+    public static final Token gteqTok = new Token(TokenType.GreaterEqual, Emoji.greaterEmoji.toString() + Emoji.equalsEmoji.toString());
     public static final Token notTok = new Token(TokenType.Not, "🥜");
     public static final Token noteqTok = new Token(TokenType.NotEqual, "🥜⚖");
     public static final Token plusTok = new Token(TokenType.Plus, "➕");

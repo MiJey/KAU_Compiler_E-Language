@@ -72,6 +72,7 @@ public class EmojiHelper {
 		if (maxOverlap != 0)
 			return Emoji.next;	// 정확히 해당되는 이모지는 없으나 앞부분이 일치하는 경우가 있으니 다음 유니코드를 읽으라는 의미
 		
+		System.out.println("");
 		return null;	// 이모지일 가능성이 없을 때(Illegal character)
 	}
 	
