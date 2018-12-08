@@ -18,10 +18,10 @@ public class Emoji {
 	public static final Emoji newline = new Emoji("<LF>",  new int[] { 0x000A });
 	
 	// keywords and functions
+	public static final Emoji assignEmoji    = new Emoji("\uD83D\uDC48", new int[] { 0xD83D, 0xDC48 }); // 👈
 	public static final Emoji ifEmoji        = new Emoji("\uD83E\uDD14", new int[] { 0xD83E, 0xDD14 }); // 🤔
 	public static final Emoji elseEmoji      = new Emoji("\uD83D\uDE1E", new int[] { 0xD83D, 0xDE1E }); // 😞
 	public static final Emoji whileEmoji     = new Emoji("\uD83D\uDD04", new int[] { 0xD83D, 0xDD04 }); // 🔄
-	public static final Emoji assignEmoji    = new Emoji("\uD83D\uDC48", new int[] { 0xD83D, 0xDC48 }); // 👈
 	
 	public static final Emoji orEmoji        = new Emoji("\uD83E\uDD37", new int[] { 0xD83E, 0xDD37 }); // 🤷
 	public static final Emoji andEmoji       = new Emoji("\uD83D\uDC6B", new int[] { 0xD83D, 0xDC6B }); // 👫

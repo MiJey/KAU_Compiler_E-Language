@@ -1,14 +1,18 @@
 
 public class EmojiHelper {
+	// 이모지 전체(next를 제외한 특수 이모지 포함)
 	private static Emoji[] emojies = new Emoji[] {
+			// 공백
 			Emoji.eof, Emoji.space, Emoji.tab, Emoji.newline,
 			
+			// 키워드
 			Emoji.ifEmoji, Emoji.elseEmoji, Emoji.whileEmoji, Emoji.assignEmoji,
 			Emoji.orEmoji, Emoji.andEmoji, Emoji.notEmoji, Emoji.equalsEmoji, Emoji.lessEmoji, Emoji.greaterEmoji,
 			Emoji.charEmoji, Emoji.stringEmoji, Emoji.trueEmoji, Emoji.falseEmoji,
 			Emoji.plusEmoji, Emoji.minusEmoji, Emoji.multiflyEmoji, Emoji.divideEmoji,
 			Emoji.printEmoji, Emoji.scanEmoji, Emoji.randomEmoji, Emoji.timeEmoji,
 			
+			// 아스키
 			Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
 			Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
 			Emoji.slash, Emoji.colon, Emoji.semicolon, Emoji.lessthan, Emoji.equal, Emoji.greaterthan, Emoji.question, Emoji.at,
@@ -24,6 +28,7 @@ public class EmojiHelper {
 			Emoji.N, Emoji.O, Emoji.P, Emoji.Q, Emoji.R, Emoji.S, Emoji.T, Emoji.U, Emoji.V, Emoji.W, Emoji.X, Emoji.Y, Emoji.Z
 	};
 	
+	// 아스키 출력 문자 중 특수 기호만
 	private static Emoji[] asciiSymbols = new Emoji[] {
 			Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
 			Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
@@ -106,5 +111,11 @@ public class EmojiHelper {
 			if (digits[i] == e) return true;
 		
 		return false;
+	}
+	
+	public void printAllEmojies() {
+		for (int i = 0; i < emojies.length; i++) {
+			System.out.println(emojies[i].toString());
+		}
 	}
 }

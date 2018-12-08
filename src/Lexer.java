@@ -101,10 +101,8 @@ public class Lexer {
 		emo = next;
 		return emo;
 	}
-	
 
-	
-	// 연속되는 문자열 찾기(Identifier, Keyword)
+	// 연속되는 문자열 찾기(Identifier)
 	public String concatLetters() {
 		String r = "";
 		do {
@@ -159,6 +157,18 @@ public class Lexer {
 				continue;
 			}
 			
+			// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
+			if (emo == Emoji.space) {
+				Emoji ws = concatSpaces();
+				if (ws == Emoji.space)
+					return Token.spaceTok;
+				else if (ws == Emoji.tab)
+					return Token.tabTok;
+			} else if (emo == Emoji.tab) {
+				nextEmoji();
+				return Token.tabTok;
+			}
+			
 			// Keywords
 			if (emo == Emoji.assignEmoji) {
 				nextEmoji();
@@ -166,23 +176,99 @@ public class Lexer {
 			} else if (emo == Emoji.ifEmoji) {
 				nextEmoji();
 				return Token.ifTok;
+			} else if (emo == Emoji.elseEmoji) {
+				nextEmoji();
+				return Token.elseTok;
+			} else if (emo == Emoji.whileEmoji) {
+				nextEmoji();
+				return Token.whileTok;
 			}
 			
-			// Identifier
-			if (emojiHelper.isLetter(emo))
-				return Token.keyword(concatLetters());
+			// 논리연산
+			if (emo == Emoji.orEmoji) {
+				nextEmoji();
+				return Token.orTok;
+			} else if (emo == Emoji.andEmoji) {
+				nextEmoji();
+				return Token.andTok;
+			} else if (emo == Emoji.notEmoji) {
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
+					return Token.notEqualTok;
+				}
+				return Token.notTok;
+			} else if (emo == Emoji.equalsEmoji) {
+				nextEmoji();
+				return Token.equalsTok;
+			} else if (emo == Emoji.lessEmoji) {	// 💁 <
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
+					return Token.lessEqualTok;
+				}	
+				return Token.lessTok;
+			} else if (emo == Emoji.greaterEmoji) { // 🙋 >
+				nextEmoji();
+				if (emo == Emoji.equalsEmoji) {
+					nextEmoji();
+					return Token.greaterEqualTok;
+				}
+				return Token.greaterTok;
+			}
 			
-			// Digits
-			if (emojiHelper.isDigit(emo)) {
-				String number = concatDigits();
-				
-				// Integer
-				if (emo != Emoji.periodEmoji)
-					return Token.mkIntLiteral(number);
-				
-				// Float
-				number += concatDigits();
-				return Token.mkFloatLiteral(number);
+			// true, false
+			if (emo == Emoji.trueEmoji) {
+				nextEmoji();
+				return Token.trueTok;
+			} else if (emo == Emoji.falseEmoji) {
+				nextEmoji();
+				return Token.falseTok;
+			}
+			
+			// 사칙연산
+			if (emo == Emoji.plusEmoji) {
+				nextEmoji();
+				return Token.plusTok;
+			} else if (emo == Emoji.minusEmoji) {
+				nextEmoji();
+				return Token.minusTok;
+			} else if (emo == Emoji.multiflyEmoji) {
+				nextEmoji();
+				return Token.multiplyTok;
+			} else if (emo == Emoji.divideEmoji) {
+				nextEmoji();
+				return Token.divideTok;
+			}
+
+			// 괄호
+			else if (emo == Emoji.leftparenEmoji) {
+				nextEmoji();
+				return Token.leftParenTok;
+			} else if (emo == Emoji.rightparenEmoji) {
+				nextEmoji();
+				return Token.rightParenTok;
+			} else if (emo == Emoji.leftbracketEmoji) {
+				nextEmoji();
+				return Token.leftBracketTok;
+			} else if (emo == Emoji.rightbracketEmoji) {
+				nextEmoji();
+				return Token.rightBracketTok;
+			}
+			
+			// 함수
+			if (emo == Emoji.printEmoji) {
+				nextEmoji();
+				return Token.printTok;
+			} else if (emo == Emoji.scanEmoji) {
+				nextEmoji();
+				return Token.scanTok;
+			} else if (emo == Emoji.randomEmoji) {
+				nextEmoji();
+				return Token.randomTok;
+			} else if (emo == Emoji.timeEmoji) {
+				nextEmoji();
+				return Token.timeTok;
 			}
 			
 			// String
@@ -203,81 +289,21 @@ public class Lexer {
 				}
 			}
 			
-			// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
-			if (emo == Emoji.space) {
-				Emoji ws = concatSpaces();
-				if (ws == Emoji.space)
-					return Token.spaceTok;
-				else if (ws == Emoji.tab)
-					return Token.tabTok;
-			} else if (emo == Emoji.tab) {
-				nextEmoji();
-				return Token.tabTok;
-			}
+			// Identifier
+			if (emojiHelper.isLetter(emo))
+				return Token.mkIdentTok(concatLetters());
 			
-			// 사칙연산
-			if (emo == Emoji.plusEmoji) {
-				nextEmoji();
-				return Token.plusTok;
-			} else if (emo == Emoji.minusEmoji) {
-				nextEmoji();
-				return Token.minusTok;
-			} else if (emo == Emoji.multiflyEmoji) {
-				nextEmoji();
-				return Token.multiplyTok;
-			} else if (emo == Emoji.divideEmoji) {
-				nextEmoji();
-				return Token.divideTok;
-			}
-			
-			
-			// 논리연산
-			else if (emo == Emoji.andEmoji) {
-				nextEmoji();
-				return Token.andTok;
-			} else if (emo == Emoji.orEmoji) {
-				nextEmoji();
-				return Token.orTok;
-			} else if (emo == Emoji.notEmoji) {
-				nextEmoji();
-				if (emo == Emoji.equalsEmoji) {
-					nextEmoji();
-					return Token.noteqTok;
-				}
-				return Token.notTok;
-			} else if (emo == Emoji.equalsEmoji) {
-				nextEmoji();
-				return Token.eqTok;
-			} else if (emo == Emoji.greaterEmoji) { // 🙋 >
+			// Digits
+			if (emojiHelper.isDigit(emo)) {
+				String number = concatDigits();
 				
-				nextEmoji();
-				if (emo == Emoji.equalsEmoji) {
-					nextEmoji();
-					return Token.gteqTok;
-				}
-				return Token.gtTok;
-			} else if (emo == Emoji.lessEmoji) {	// 💁 <
-				nextEmoji();
-				if (emo == Emoji.equalsEmoji) {
-					nextEmoji();
-					return Token.lteqTok;
-				}	
-				return Token.ltTok;
-			}
-			
-			// 괄호
-			else if (emo == Emoji.leftparenEmoji) {
-				nextEmoji();
-				return Token.leftParenTok;
-			} else if (emo == Emoji.rightparenEmoji) {
-				nextEmoji();
-				return Token.rightParenTok;
-			} else if (emo == Emoji.leftbracketEmoji) {
-				nextEmoji();
-				return Token.leftBracketTok;
-			} else if (emo == Emoji.rightbracketEmoji) {
-				nextEmoji();
-				return Token.rightBracketTok;
+				// Integer
+				if (emo != Emoji.periodEmoji)
+					return Token.mkIntLiteral(number);
+				
+				// Float
+				number += concatDigits();
+				return Token.mkFloatLiteral(number);
 			}
 
 			error("next() Illigal character: " + emo.toString());

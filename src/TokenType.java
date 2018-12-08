@@ -1,12 +1,14 @@
 ﻿public enum TokenType {
+	Eof, Space, Tab,
+	
+	Assign, If, Else, While,
+	Or, And, Not, Equals, NotEqual, Less, LessEqual, Greater, GreaterEqual,
 	Identifier, IntLiteral, FloatLiteral, CharLiteral, StringLiteral,
-    True, False, And, Or, Assign, Comma,
-    Not, Equals, NotEqual, Less, LessEqual, Greater, GreaterEqual,
-    Plus, Minus, Multiply, Divide,
-    /*LeftBrace, RightBrace, */LeftBracket, RightBracket, LeftParen, RightParen,
-    If, Else, While,
-    Eof, Eol, Space, Tab, Err,
-
+	True, False,
+	Plus, Minus, Multiply, Divide,
+    
+    LeftBracket, RightBracket, LeftParen, RightParen,
+    
     // 타 언어에서는 함수로 지원하지만 E-Language에서는 기본적인 키워드로 제공하는 것들
-    Print, Scan, Random, Time,
+	Print, Scan, Random, Time,
 }
