@@ -2,12 +2,13 @@
 
 	private static final int KEYWORDS = TokenType.Eof.ordinal();
 	private static final String[] reserved = new String[KEYWORDS];
-	private static Token[] tokens = new Token[KEYWORDS];
+	// private static Token[] tokens = new Token[KEYWORDS];
 	
 	public static final Token eofTok          = new Token(TokenType.Eof,          Emoji.eof.toString());
 	public static final Token spaceTok        = new Token(TokenType.Space,        Emoji.space.toString());
 	public static final Token tabTok          = new Token(TokenType.Tab,          Emoji.tab.toString());
-
+	public static final Token newlineTok      = new Token(TokenType.Newline,      Emoji.newline.toString());
+	
 	public static final Token assignTok       = new Token(TokenType.Assign,       Emoji.assignEmoji.toString());
 	public static final Token ifTok           = new Token(TokenType.If,           Emoji.ifEmoji.toString());
 	public static final Token elseTok         = new Token(TokenType.Else,         Emoji.elseEmoji.toString());
@@ -50,7 +51,7 @@
 		if (t.compareTo(TokenType.Eof) < 0) {
 			int ti = t.ordinal();
 			reserved[ti] = v;
-			tokens[ti] = this;
+			// tokens[ti] = this;
 		}
 	}
 
@@ -61,23 +62,23 @@
 		return new Token(TokenType.Identifier, name);
 	}
 
-	public static Token mkIntLiteral(String name) {
-		return new Token(TokenType.IntLiteral, name);
+	public static Token mkIntLiteral(String number) {
+		return new Token(TokenType.IntLiteral, number);
 	}
 	
-	public static Token mkFloatLiteral(String name) {
-		return new Token(TokenType.FloatLiteral, name);
+	public static Token mkFloatLiteral(String number) {
+		return new Token(TokenType.FloatLiteral, number);
 	}
 	
-	public static Token mkCharLiteral(String name) {
-		return new Token(TokenType.CharLiteral, name);
+	public static Token mkCharLiteral(String ch) {
+		return new Token(TokenType.CharLiteral, ch);
 	}
 	
-	public static Token mkStringLiteral(String name) {
-		return new Token (TokenType.StringLiteral, name);
+	public static Token mkStringLiteral(String str) {
+		return new Token (TokenType.StringLiteral, str);
 	}
 	
 	public String toString() {
-		return type + "\t" + value;
+		return String.format("\t%-15s\t%s", type, value);
 	}
 }

@@ -1,5 +1,5 @@
 ﻿public enum TokenType {
-	Eof, Space, Tab,
+	Eof, Space, Tab, Newline,
 	
 	Assign, If, Else, While,
 	Or, And, Not, Equals, NotEqual, Less, LessEqual, Greater, GreaterEqual,

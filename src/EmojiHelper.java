@@ -19,7 +19,7 @@ public class EmojiHelper {
 			Emoji.leftbracketEmoji, Emoji.backslash, Emoji.rightbracketEmoji, Emoji.caret, Emoji.underscore, Emoji.accent,
 			Emoji.leftbrace, Emoji.verticalbar, Emoji.rightbrace, Emoji.tilde,
 			
-			Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine, Emoji.ten,
+			Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine,
 			
 			Emoji.a, Emoji.b, Emoji.c, Emoji.d, Emoji.e, Emoji.f, Emoji.g, Emoji.h, Emoji.i, Emoji.j, Emoji.k, Emoji.l, Emoji.m,
 			Emoji.n, Emoji.o, Emoji.p, Emoji.q, Emoji.r, Emoji.s, Emoji.t, Emoji.u, Emoji.v, Emoji.w, Emoji.x, Emoji.y, Emoji.z,
@@ -46,8 +46,13 @@ public class EmojiHelper {
 	};
 	
 	private static Emoji[] digits = new Emoji[] {
-			Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine, Emoji.ten
+			Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine
 	};
+	
+	// 위 Emoji 배열과 같은 순서
+	private static String ascii_symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
+	private static String ascii_letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	private static String ascii_digits = "0123456789";
 	
 	public EmojiHelper() {}
 	
@@ -117,5 +122,51 @@ public class EmojiHelper {
 		for (int i = 0; i < emojies.length; i++) {
 			System.out.println(emojies[i].toString());
 		}
+	}
+	
+	public int parseInt(String emojiString) {
+		String result = "";
+		
+		while (emojiString.length() != 0) {
+			if (emojiString.startsWith(Emoji.zero.toString())) result += "0";
+			else if (emojiString.startsWith(Emoji.one.toString())) result += "1";
+			else if (emojiString.startsWith(Emoji.two.toString())) result += "2";
+			else if (emojiString.startsWith(Emoji.three.toString())) result += "3";
+			else if (emojiString.startsWith(Emoji.four.toString())) result += "4";
+			else if (emojiString.startsWith(Emoji.five.toString())) result += "5";
+			else if (emojiString.startsWith(Emoji.six.toString())) result += "6";
+			else if (emojiString.startsWith(Emoji.seven.toString())) result += "7";
+			else if (emojiString.startsWith(Emoji.eight.toString())) result += "8";
+			else if (emojiString.startsWith(Emoji.nine.toString())) result += "9";
+			
+			emojiString = emojiString.substring(2);
+		}
+		
+		return Integer.parseInt(result);
+	}
+	
+	public boolean parseBool(String emojiString) {
+		if (emojiString.equals(Emoji.trueEmoji.toString()))
+			return true;
+		else if (emojiString.equals(Emoji.falseEmoji.toString()))
+			return false;
+		
+		System.err.println(emojiString);
+		System.err.printf("EmojiHelper: parseBool: Can not convert.");
+		System.exit(1);
+		
+		return false;
+	}
+	
+	public char parseChar(String emojiString) {
+		return 'a';
+	}
+	
+	public float parseFloat(String emojiString) {
+		return 0.0f;
+	}
+	
+	public String parseString(String emojiString) {
+		return "converted string";
 	}
 }

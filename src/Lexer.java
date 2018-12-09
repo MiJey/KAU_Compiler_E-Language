@@ -66,15 +66,16 @@ public class Lexer {
     		if (line == null) {
     			line = "" + (char)EOF;
     		} else {
-    			System.out.printf("line %3d: %s\n", lineno, line);
     			lineno++;
     			line += (char)LF;
+    			System.out.printf("line %2d: %s", lineno, line);
     		}
     		
     		col = 0;
     	}
 
     	uni = (int)line.charAt(col);
+    	// System.out.printf("next Unicode: U+%04X\n", uni);
     	return uni;
     }
 	
@@ -148,14 +149,19 @@ public class Lexer {
 	
 	public Token next() {
 		while (true) {
-			// End of file
-			if(emo == Emoji.eof)
-				return Token.eofTok;
-			
-			if (emo == Emoji.next || emo == Emoji.newline) {
+			if (emo == Emoji.next) {
 				nextEmoji();
 				continue;
 			}
+			
+			if (emo == Emoji.newline) {
+				// System.out.println(Token.newlineTok.toString());
+				nextEmoji();
+				return Token.newlineTok;
+			}
+			
+			if (emo == Emoji.eof)
+				return Token.eofTok;
 			
 			// E-Language에서는 공백이나 탭도 중요한 문자이기 때문에 토큰으로 처리함
 			if (emo == Emoji.space) {
@@ -349,9 +355,10 @@ public class Lexer {
 		Token tok = lexer.next( );
 		
 		while (tok != Token.eofTok) {
-			System.out.println("\t" + tok.toString());
+			System.out.println(tok.toString());
 			tok = lexer.next();
 		}
+		
 		System.out.println("Finish");
 	}
 }

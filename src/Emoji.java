@@ -21,7 +21,7 @@ public class Emoji {
 	public static final Emoji assignEmoji    = new Emoji("\uD83D\uDC48", new int[] { 0xD83D, 0xDC48 }); // 👈
 	public static final Emoji ifEmoji        = new Emoji("\uD83E\uDD14", new int[] { 0xD83E, 0xDD14 }); // 🤔
 	public static final Emoji elseEmoji      = new Emoji("\uD83D\uDE1E", new int[] { 0xD83D, 0xDE1E }); // 😞
-	public static final Emoji whileEmoji     = new Emoji("\uD83D\uDD04", new int[] { 0xD83D, 0xDD04 }); // 🔄
+	public static final Emoji whileEmoji     = new Emoji("\u267B\uFE0F", new int[] { 0x267B, 0xFE0F }); // ♻️
 	
 	public static final Emoji orEmoji        = new Emoji("\uD83E\uDD37", new int[] { 0xD83E, 0xDD37 }); // 🤷
 	public static final Emoji andEmoji       = new Emoji("\uD83D\uDC6B", new int[] { 0xD83D, 0xDC6B }); // 👫
@@ -82,16 +82,16 @@ public class Emoji {
 	public static final Emoji tilde             = new Emoji("\uD83C\uDF0A", new int[] { 0xD83C, 0xDF0A }); // 🌊
 	 
 	// 0 ~ 9
-	public static final Emoji one   = new Emoji("\uD83D\uDD5B", new int[] { 0xD83D, 0xDD5B }); // 🕛
-	public static final Emoji two   = new Emoji("\uD83D\uDD50", new int[] { 0xD83D, 0xDD50 }); // 🕐
-	public static final Emoji three = new Emoji("\uD83D\uDD51", new int[] { 0xD83D, 0xDD51 }); // 🕑
-	public static final Emoji four  = new Emoji("\uD83D\uDD52", new int[] { 0xD83D, 0xDD52 }); // 🕒
-	public static final Emoji five  = new Emoji("\uD83D\uDD53", new int[] { 0xD83D, 0xDD53 }); // 🕓
-	public static final Emoji six   = new Emoji("\uD83D\uDD54", new int[] { 0xD83D, 0xDD54 }); // 🕔
-	public static final Emoji seven = new Emoji("\uD83D\uDD55", new int[] { 0xD83D, 0xDD55 }); // 🕕
-	public static final Emoji eight = new Emoji("\uD83D\uDD56", new int[] { 0xD83D, 0xDD56 }); // 🕖
-	public static final Emoji nine  = new Emoji("\uD83D\uDD57", new int[] { 0xD83D, 0xDD57 }); // 🕗
-	public static final Emoji ten   = new Emoji("\uD83D\uDD58", new int[] { 0xD83D, 0xDD58 }); // 🕘
+	public static final Emoji zero  = new Emoji("\uD83D\uDD5B", new int[] { 0xD83D, 0xDD5B }); // 🕛
+	public static final Emoji one   = new Emoji("\uD83D\uDD50", new int[] { 0xD83D, 0xDD50 }); // 🕐
+	public static final Emoji two   = new Emoji("\uD83D\uDD51", new int[] { 0xD83D, 0xDD51 }); // 🕑
+	public static final Emoji three = new Emoji("\uD83D\uDD52", new int[] { 0xD83D, 0xDD52 }); // 🕒
+	public static final Emoji four  = new Emoji("\uD83D\uDD53", new int[] { 0xD83D, 0xDD53 }); // 🕓
+	public static final Emoji five  = new Emoji("\uD83D\uDD54", new int[] { 0xD83D, 0xDD54 }); // 🕔
+	public static final Emoji six   = new Emoji("\uD83D\uDD55", new int[] { 0xD83D, 0xDD55 }); // 🕕
+	public static final Emoji seven = new Emoji("\uD83D\uDD56", new int[] { 0xD83D, 0xDD56 }); // 🕖
+	public static final Emoji eight = new Emoji("\uD83D\uDD57", new int[] { 0xD83D, 0xDD57 }); // 🕗
+	public static final Emoji nine  = new Emoji("\uD83D\uDD58", new int[] { 0xD83D, 0xDD58 }); // 🕘
 	 
 	// a ~ z
 	public static final Emoji a = new Emoji("\uD83C\uDF4F", new int[] { 0xD83C, 0xDF4F }); // 🍏
