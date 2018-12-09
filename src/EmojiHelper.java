@@ -124,6 +124,7 @@ public class EmojiHelper {
 		}
 	}
 	
+	/*
 	public int parseInt(String emojiString) {
 		String result = "";
 		
@@ -165,8 +166,57 @@ public class EmojiHelper {
 	public float parseFloat(String emojiString) {
 		return 0.0f;
 	}
-	
+	*/
 	public String parseString(String emojiString) {
-		return "converted string";
+		String result = "";
+		while (emojiString.length() > 0) {
+			for (int i = 0; i < asciiSymbols.length; i++) {
+				if (asciiSymbols[i].toString().equals(getFirstEmoji(emojiString))) {
+					result += ascii_symbols.substring(i, i+1);
+					emojiString = emojiString.substring(asciiSymbols[i].toString().length());
+				}
+			}
+			
+			for (int i = 0; i < letters.length; i++) {
+				if (letters[i].toString().equals(getFirstEmoji(emojiString))) {
+					result += ascii_letters.substring(i, i+1);
+					emojiString = emojiString.substring(asciiSymbols[i].toString().length());
+				}
+			}
+
+			for (int i = 0; i < digits.length; i++) {
+				if (digits[i].toString().equals(getFirstEmoji(emojiString))) {
+					result += ascii_digits.substring(i, i+1);
+					emojiString = emojiString.substring(asciiSymbols[i].toString().length());
+				}
+			}
+		}
+
+		return result;
+	}
+	
+	private String getFirstEmoji(String emojiString) {
+		int unicodes[] = new int[] {};
+		
+		for (int i = 0; i < emojiString.length(); i++) {
+			// 배열 크기를 하나 늘려서 복사
+			int temp[] = new int[unicodes.length + 1];
+			for (int j = 0; j < unicodes.length; j++)
+				temp[j] = unicodes[j];
+			
+			temp[unicodes.length] = emojiString.charAt(i);
+			unicodes = temp;
+			
+			Emoji next = findEmoji(unicodes);
+			
+			if (next == null)
+				return "Something wrong!";
+			else if (next == Emoji.next)
+				continue;
+			else
+				return next.toString();
+		}
+
+		return "Something wrong!";
 	}
 }

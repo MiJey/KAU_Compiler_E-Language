@@ -51,10 +51,8 @@ public class Parser {
 	private Block block() {
 		Block b = new Block();
 		
-		b.members.add(statement());
-		b.members.add(statement());
-		b.members.add(statement());
-
+		while (isStatement())
+			b.members.add(statement());
 		
 		return b;
 	}
@@ -142,6 +140,8 @@ public class Parser {
 	//------------------------------------------------------------
 	
 	private boolean isStatement() {
+		if (token.type().equals(TokenType.Tab)) 
+			return true;
 		if (isSkip() || isAssignment() || isFunction() || isIfStatement() || isWhileStatement())
 			return true;
 		return false;
@@ -286,7 +286,7 @@ public class Parser {
 			e = expression();
 			match(TokenType.RightParen);
 		} else {
-			error("Invalid primary.");
+			error("primary(Identifier, Literal, LeftParen)");
 		}
 
 		return e;
@@ -298,15 +298,19 @@ public class Parser {
 		Value v = null;
 		
 		if (token.type().equals(TokenType.IntLiteral))
-			v = new IntValue(emojiHelper.parseInt(token.value()));
+			v = new IntValue(Integer.parseInt(token.value()));
+		else if (token.type().equals(TokenType.True))
+			v = new BoolValue(true);
+		else if (token.type().equals(TokenType.False))
+			v = new BoolValue(false);
 		else if (token.type().equals(TokenType.CharLiteral))
-			v = new CharValue(emojiHelper.parseChar(token.value()));
+			v = new CharValue(token.value().charAt(0));
 		else if (token.type().equals(TokenType.FloatLiteral))
-			v = new FloatValue(emojiHelper.parseFloat(token.value()));
+			v = new FloatValue(Float.parseFloat(token.value()));
 		else if (token.type().equals(TokenType.StringLiteral))
-			v = new StringValue(emojiHelper.parseString(token.value()));
+			v = new StringValue(token.value());
 		else
-			error("Invalid literal.");
+			error("literal(Int, Bool, Char, Float, String)");
 		
 		token = lexer.next();
 		return v;
