@@ -43,53 +43,53 @@ public class Parser {
 
 	// Program → Block
 	public Program program() {
-		Program prog = new Program(block());
+		Program prog = new Program(block(0));
 		return prog;
 	}
 
 	// Block → { [TAB] Statement }
-	private Block block() {
-		Block b = new Block();
+	private Block block(int depth) {
+		Block b = new Block(depth);
 		
-		while (isStatement())
-			b.members.add(statement());
-		
+		while (isStatement()) {
+			// 현재 블록의 깊이보다 읽은 탭의 갯수가 적을 경우 블록에서 빠져나감
+			if (depth > getDepth())
+				break;
+			b.members.add(statement(depth));
+		}
+			
 		return b;
 	}
 	
 	// Statement → Block | Skip | Assignment | Function | IfStatement | WhileStatement
-	private Statement statement() {
-		// 문장 맨 앞의 탭의 갯수를 세어서 깊이를 확인
-		int depth = getDepth();
-		
-		// 탭이 삭제된 상황에서 어떤 유형의 Statement인지 확인
-		if (isSkip())           return skip();
-		if (isAssignment())     return assignment();
-		if (isFunction())       return function();
-		if (isIfStatement())    return ifStatement();
-		if (isWhileStatement()) return whileStatement();
+	private Statement statement(int depth) {
+		if (isSkip())           return skip(depth);
+		if (isAssignment())     return assignment(depth);
+		if (isFunction())       return function(depth);
+		if (isIfStatement())    return ifStatement(depth);
+		if (isWhileStatement()) return whileStatement(depth);
 		
 		error("Invalid statement.");
 		return null;
 	}
 	
 	// Skip → NEWLINE
-	private Skip skip() {
+	private Skip skip(int depth) {
 		token = lexer.next();
-		return new Skip();
+		return new Skip(depth);
 	}
 	
 	// Assignment → Identifier 👈 Expression NEWLINE
-	private Assignment assignment() {
+	private Assignment assignment(int depth) {
 		Variable target = new Variable(match(TokenType.Identifier));
 		match(TokenType.Assign);
 		Expression source = expression();
 		match(TokenType.Newline);
-		return new Assignment(target, source);
+		return new Assignment(depth, target, source);
 	}
 	
 	// Function → ( 📺 | 🎹  | 🎲  | ⏰ ) Expression NEWLINE
-	private Function function() {
+	private Function function(int depth) {
 		TokenType t = token.type();
 	
 		if (t.equals(TokenType.Print))
@@ -106,35 +106,35 @@ public class Parser {
 		Expression domain = expression();
 		match(TokenType.Newline);
 		
-		return new Function(t, domain);
+		return new Function(depth, t, domain);
 	}
 
 	// IfStatement →
 	// 🤔 Expression NEWLINE Block
 	// [ 😞 NEWLINE Block ]
-	private Conditional ifStatement() {
+	private Conditional ifStatement(int depth) {
 		match(TokenType.If);
 		Expression e = expression();
 		match(TokenType.Newline);
-		Block b = block();
+		Block b = block(depth + 1);
 		
 		if (token.type().equals(TokenType.Else)) {
 			match(TokenType.Else);
 			match(TokenType.Newline);
-			return new Conditional(e, b, block());
+			return new Conditional(depth, e, b, block(depth + 1));
 		}
-		return new Conditional(e, b);
+		return new Conditional(depth, e, b);
 	}
 	
 	// WhileStatement →
 	// ♻️ Expression NEWLINE Block
-	private Loop whileStatement() {
+	private Loop whileStatement(int depth) {
 		match(TokenType.While);
 		Expression e = expression();
 		match(TokenType.Newline);
-		Block b = block();
+		Block b = block(depth + 1);
 		
-		return new Loop(e, b);
+		return new Loop(depth, e, b);
 	}
 	
 	//------------------------------------------------------------
