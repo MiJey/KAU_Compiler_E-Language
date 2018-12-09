@@ -168,12 +168,23 @@ abstract class Expression {
 
 class Variable extends Expression {
 	private String id;
+	private Array d1, d2;	// 2차원 배열
 	
-	Variable (String name) { 
+	Variable (String name, Array d1, Array d2) { 
 		id = name;
+		this.d1 = d1;
+		this.d2 = d2;
 	}
 	
-	public String toString() { return id; }
+	public String toString() { 
+		String result = id;
+		if (d1 != null)
+			result += d1.toString();
+		if (d2 != null)
+			result += d2.toString();
+		return result;
+	}
+	
 	public int hashCode() { return id.hashCode(); }
 	
 	public boolean equals (Object obj) {
@@ -184,7 +195,7 @@ class Variable extends Expression {
 	public void display(int depth) {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
-		System.out.println(" Variable: " + id);
+		System.out.println(" Variable: " + toString());
 	}
 }
 
@@ -233,6 +244,36 @@ class Unary extends Expression {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" └</Unary>");
+	}
+}
+
+class Array extends Expression {
+	public ArrayList<Expression> list = new ArrayList<Expression>();
+	
+	public String toString() {
+		String result = "[";
+		
+		for (int i = 0; i < list.size() - 1; i++)
+			result += list.get(i).toString() + ", ";
+		
+		if (list.size() != 0)
+			result += list.get(list.size() - 1).toString();
+		
+		result += "]";
+		return result;
+	}
+
+	public void display(int depth) {
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Array>");
+		
+		for (int i = 0; i < list.size(); i++)
+			list.get(i).display(depth + 1);
+		
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Array>");
 	}
 }
 

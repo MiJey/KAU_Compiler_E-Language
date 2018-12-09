@@ -81,7 +81,7 @@ public class Parser {
 	
 	// Assignment → Identifier 👈 Expression NEWLINE
 	private Assignment assignment(int depth) {
-		Variable target = new Variable(match(TokenType.Identifier));
+		Variable target = new Variable(match(TokenType.Identifier), null, null);
 		match(TokenType.Assign);
 		Expression source = expression();
 		match(TokenType.Newline);
@@ -273,23 +273,54 @@ public class Parser {
 		return primary();
 	}
 	
-	// Primary → Identifier | Literal | 📖Expression📕
+	// Primary → Identifier | Literal | Array | 📖Expression📕
 	private Expression primary() {
 		Expression e = null;
 		
 		if (token.type().equals(TokenType.Identifier)) {
-			e = new Variable(match(TokenType.Identifier));
+			// Identifier → Letter { Letter | Digit } [ Array [ Array ] ]
+			String id = match(TokenType.Identifier);
+			Array d1 = null, d2 = null;
+			
+			// 1차원 배열
+			if (token.type().equals(TokenType.LeftBracket))
+				d1 = array();
+			// 2차원 배열
+			if (token.type().equals(TokenType.LeftBracket))
+				d2 = array();
+			
+			e = new Variable(id, d1, d2);
 		} else if (isLiteral()) {
 			e = literal();
+		} else if (token.type().equals(TokenType.LeftBracket)) {
+			e = array();
 		} else if (token.type().equals(TokenType.LeftParen)) {
 			match(TokenType.LeftParen);
 			e = expression();
 			match(TokenType.RightParen);
 		} else {
-			error("primary(Identifier, Literal, LeftParen)");
+			error("primary(Identifier, Literal, LeftBracket, LeftParen)");
 		}
 
 		return e;
+	}
+	
+	// Array → 📈Expression { SPACE Expression }📉
+	private Array array() {
+		Array arr = new Array();
+
+		match(TokenType.LeftBracket);
+		
+		while (!token.type().equals(TokenType.RightBracket)) {
+			arr.list.add(expression());
+			
+			if (token.type().equals(TokenType.Space))
+				match(TokenType.Space);
+		}
+		
+		match(TokenType.RightBracket);
+		
+		return arr;
 	}
 	
 	//===================== Lexical Level ========================
