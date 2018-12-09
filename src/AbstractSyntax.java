@@ -24,16 +24,16 @@ class Block extends Statement {
 	public ArrayList<Statement> members = new ArrayList<Statement>();
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Block>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Block>");
 		
 		for (int i = 0; i < members.size(); i++)
 			members.get(i).display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Block>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Block>");
 	}
 }
 
@@ -51,16 +51,16 @@ class Assignment extends Statement {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Assignment>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Assignment>");
 		
 		target.display(n + 1);
 		source.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Assignment>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Assignment>");
 	}
 }
 
@@ -74,15 +74,15 @@ class Function extends Statement {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Function type=\"" + function.toString() + "\">");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Function type=\"" + function.toString() + "\">");
 		
 		domain.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Function>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Function>");
 	}
 }
 
@@ -102,17 +102,17 @@ class Conditional extends Statement {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Conditional>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Conditional>");
 		
 		condition.display(n + 1);
 		thenBranch.display(n + 1);
 		elseBranch.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Conditional>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Conditional>");
 	}
 }
 
@@ -126,16 +126,16 @@ class Loop extends Statement {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Loop>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Loop>");
 		
 		condition.display(n + 1);
 		block.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Loop>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Loop>");
 	}
 }
 
@@ -159,9 +159,9 @@ class Variable extends Expression {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("Variable: " + id);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" Variable: " + id);
 	}
 }
 
@@ -176,17 +176,17 @@ class Binary extends Expression {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("<Binary>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Binary>");
 		
 		op.display(n + 1);
 		term1.display(n + 1);
 		term2.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Binary>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Binary>");
 	}
 }
 
@@ -200,16 +200,16 @@ class Unary extends Expression {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Binary>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Binary>");
 		
 		op.display(n + 1);
 		term.display(n + 1);
 		
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("</Binary>");
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Binary>");
 	}
 }
 
@@ -277,9 +277,9 @@ class IntValue extends Value {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("IntValue: " + value);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" IntValue: " + value);
 	}
 }
 
@@ -304,9 +304,9 @@ class BoolValue extends Value {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("BoolValue: " + value);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" BoolValue: " + value);
 	}
 }
 
@@ -326,9 +326,9 @@ class CharValue extends Value {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("CharValue: " + value);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" CharValue: " + value);
 	}
 }
 
@@ -348,9 +348,9 @@ class FloatValue extends Value {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("FloatValue: " + value);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" FloatValue: " + value);
 	}
 }
 
@@ -370,9 +370,9 @@ class StringValue extends Value {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("StringValue: " + value);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" StringValue: " + value);
 	}
 }
 
@@ -396,8 +396,8 @@ class Operator {
 	}
 	
 	public void display(int n) {
-		for (int i = 0; i < n; i++)
-			System.out.print("\t");
-		System.out.println("Operator: " + val);
+		for (int i = 0; i < n - 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" Operator: " + val);
 	}
 }

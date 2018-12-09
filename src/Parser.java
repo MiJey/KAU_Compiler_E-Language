@@ -52,6 +52,9 @@ public class Parser {
 		Block b = new Block();
 		
 		b.members.add(statement());
+		b.members.add(statement());
+		b.members.add(statement());
+
 		
 		return b;
 	}
