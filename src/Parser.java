@@ -61,13 +61,15 @@ public class Parser {
 		return b;
 	}
 	
-	// Statement → Block | Skip | Assignment | Function | IfStatement | WhileStatement
+	// Statement → Block | Skip | Assignment | FunctionStatement | IfStatement | WhileStatement | BreakStatement | ContinueStatement
 	private Statement statement(int depth) {
 		if (isSkip())           return skip(depth);
 		if (isAssignment())     return assignment(depth);
-		if (isFunction())       return function(depth);
+		if (isFunction())       return functionStatement(depth);
 		if (isIfStatement())    return ifStatement(depth);
 		if (isWhileStatement()) return whileStatement(depth);
+		if (isBreak())          return breakStatement(depth);
+		if (isContinue())       return continueStatement(depth);
 		
 		error("Invalid statement.");
 		return null;
@@ -88,70 +90,13 @@ public class Parser {
 		return new Assignment(depth, target, source);
 	}
 	
-	// Function → ( 📺 | 🎹 | 🎹🦄 | 🎹🦊 | 🎲 ) Expression NEWLINE
-	private Function function(int depth) {
-		// Print
-		if (token.type().equals(TokenType.Print)) {
-			match(TokenType.Print);
-			Expression param = expression();
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Print, param);	// print(a): 파라미터가 1개
-		}
-		
-		// Input
-		if (token.type().equals(TokenType.Input)) {
-			match(TokenType.Input);
-			
-			if (token.type().equals(TokenType.IntType)) {
-				match(TokenType.IntType);
-				Expression param = expression();
-				match(TokenType.Newline);
-				return new Function(depth, TokenType.Input, TokenType.IntType, param);	// a = int(input()): 파라미터가 2개
-			} else if (token.type().equals(TokenType.FloatType)) {
-				match(TokenType.FloatType);
-				Expression param = expression();
-				match(TokenType.Newline);
-				return new Function(depth, TokenType.Input, TokenType.FloatType, param);	// a = float(input()): 파라미터가 2개
-			}
-			
-			Expression param = expression();
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Input, param);	// a = input(): 파라미터가 1개
-		}
-		
-		// Random
-		if (token.type().equals(TokenType.Random)) {
-			match(TokenType.Random);
-			Expression param = expression();
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Random, param);
-		}
-		
-		// Time
-		if (token.type().equals(TokenType.Time)) {
-			match(TokenType.Time);
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Time);
-		}
-		
-		// Break
-		if (token.type().equals(TokenType.Break)) {
-			match(TokenType.Break);
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Break);
-		}
-		
-		// Continue
-		if (token.type().equals(TokenType.Continue)) {
-			match(TokenType.Continue);
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Continue);
-		}
-		
-		error("Invalid function.");
-		return null;
+	// FunctionStatement → Expression NEWLINE
+	private FunctionStatement functionStatement(int depth) {
+		Expression function = function();
+		match(TokenType.Newline);
+		return new FunctionStatement(depth, function);
 	}
-
+	
 	// IfStatement →
 	// 🤔 Expression NEWLINE Block
 	// [ 😞 NEWLINE Block ]
@@ -180,6 +125,20 @@ public class Parser {
 		return new Loop(depth, e, b);
 	}
 	
+	// BreakStatement → 💣
+	private BreakStatement breakStatement(int depth) {
+		match(TokenType.Break);
+		match(TokenType.Newline);
+		return new BreakStatement(depth);
+	}
+	
+	// ContinueStatement → 🎡
+	private ContinueStatement continueStatement(int depth) {
+		match(TokenType.Continue);
+		match(TokenType.Newline);
+		return new ContinueStatement(depth);
+	}
+	
 	//------------------------------------------------------------
 	
 	private boolean isStatement() {
@@ -206,9 +165,7 @@ public class Parser {
 		if (token.type().equals(TokenType.Print)
 			|| token.type().equals(TokenType.Input)
 			|| token.type().equals(TokenType.Random)
-			|| token.type().equals(TokenType.Time)
-			|| token.type().equals(TokenType.Break)
-			|| token.type().equals(TokenType.Continue))
+			|| token.type().equals(TokenType.Time))
 			return true;
 		return false;
 	}
@@ -221,6 +178,18 @@ public class Parser {
 	
 	private boolean isWhileStatement() {
 		if (token.type().equals(TokenType.While))
+			return true;
+		return false;
+	}
+	
+	private boolean isBreak() {
+		if (token.type().equals(TokenType.Break))
+			return true;
+		return false;
+	}
+	
+	private boolean isContinue() {
+		if (token.type().equals(TokenType.Continue))
 			return true;
 		return false;
 	}
@@ -319,7 +288,7 @@ public class Parser {
 		return primary();
 	}
 	
-	// Primary → Identifier | Literal | Array | 📖Expression📕
+	// Primary → Identifier | Literal | Array | Function | 📖Expression📕
 	private Expression primary() {
 		Expression e = null;
 		
@@ -345,12 +314,14 @@ public class Parser {
 			e = literal();
 		} else if (token.type().equals(TokenType.LeftBracket)) {
 			e = array();
+		} else if (isFunction()) {
+			e = function();
 		} else if (token.type().equals(TokenType.LeftParen)) {
 			match(TokenType.LeftParen);
 			e = expression();
 			match(TokenType.RightParen);
 		} else {
-			error("primary(Identifier, Literal, LeftBracket, LeftParen)");
+			error("primary(Identifier, Literal, LeftBracket(Array), Function, LeftParen(Expression))");
 		}
 
 		return e;
@@ -372,6 +343,62 @@ public class Parser {
 		match(TokenType.RightBracket);
 		
 		return arr;
+	}
+	
+	// Function → ( 📺 | 🎹 | 🎹🦄 | 🎹🦊 | 🎲 ) Expression NEWLINE
+	private Expression function() {
+		// Print
+		if (token.type().equals(TokenType.Print)) {
+			match(TokenType.Print);
+			Expression param = expression();
+			return new Function(TokenType.Print, param);	// print(a): 파라미터가 1개
+		}
+		
+		// Input
+		if (token.type().equals(TokenType.Input)) {
+			match(TokenType.Input);
+			
+			if (token.type().equals(TokenType.IntType)) {
+				match(TokenType.IntType);
+				Expression param = expression();
+				return new Function(TokenType.Input, TokenType.IntType, param);	// a = int(input()): 파라미터가 2개
+			} else if (token.type().equals(TokenType.FloatType)) {
+				match(TokenType.FloatType);
+				Expression param = expression();
+				return new Function(TokenType.Input, TokenType.FloatType, param);	// a = float(input()): 파라미터가 2개
+			}
+			
+			Expression param = expression();
+			return new Function(TokenType.Input, param);	// a = input(): 파라미터가 1개
+		}
+		
+		// Random
+		if (token.type().equals(TokenType.Random)) {
+			match(TokenType.Random);
+			Expression param = expression();
+			return new Function(TokenType.Random, param);
+		}
+		
+		// Time
+		if (token.type().equals(TokenType.Time)) {
+			match(TokenType.Time);
+			return new Function(TokenType.Time);
+		}
+		
+		// Break
+		if (token.type().equals(TokenType.Break)) {
+			match(TokenType.Break);
+			return new Function(TokenType.Break);
+		}
+		
+		// Continue
+		if (token.type().equals(TokenType.Continue)) {
+			match(TokenType.Continue);
+			return new Function(TokenType.Continue);
+		}
+		
+		error("Invalid function.");
+		return null;
 	}
 	
 	//===================== Lexical Level ========================

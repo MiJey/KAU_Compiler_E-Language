@@ -78,46 +78,25 @@ class Assignment extends Statement {
 	}
 }
 
-class Function extends Statement {
-	TokenType function;
-	TokenType functionType = null;
-	Expression param = null;
+class FunctionStatement extends Statement {
+	Expression function;
 	int depth;
 	
-	// time
-	Function (int d, TokenType t) {
+	FunctionStatement (int d, Expression e) {
 		depth = d;
-		function = t;
-	}
-	
-	// print, input, random
-	Function (int d, TokenType t, Expression p) {
-		depth = d;
-		function = t;
-		param = p;
-	}
-	
-	// int(input), float(input)
-	Function (int d, TokenType t, TokenType t2, Expression p) {
-		depth = d;
-		function = t;
-		functionType = t2;
-		param = p;
+		function = e;
 	}
 	
 	public void display() {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
-		System.out.println(" ┌<Function type=\"" + function.toString()
-		                                          + (functionType == null ? "" : ": " + functionType.toString())
-		                                          + "\">");
+		System.out.println(" ┌<FunctionStatement>");
 		
-		if (param != null)
-			param.display(depth + 1);
-			
+		function.display(depth + 1);
+		
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
-		System.out.println(" └</Function>");
+		System.out.println(" └</FunctionStatement>");
 	}
 }
 
@@ -176,6 +155,30 @@ class Loop extends Statement {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" └</Loop>");
+	}
+}
+
+class BreakStatement extends Statement {
+	int depth;
+	
+	BreakStatement (int d) { depth = d; }
+	
+	public void display() {
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println("  <BreakStatement>");
+	}
+}
+
+class ContinueStatement extends Statement {
+	int depth;
+	
+	ContinueStatement (int d) { depth = d; }
+	
+	public void display() {
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println("  <ContinueStatement>");
 	}
 }
 
@@ -297,6 +300,47 @@ class Array extends Expression {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" └</Array>");
+	}
+}
+
+class Function extends Expression {
+	TokenType function;
+	TokenType functionType = null;
+	Expression param = null;
+	
+	// time
+	Function (TokenType t) {
+		function = t;
+	}
+	
+	// print, input, random
+	Function (TokenType t, Expression p) {
+		function = t;
+		param = p;
+	}
+	
+	// int(input), float(input)
+	Function (TokenType t, TokenType t2, Expression p) {
+		function = t;
+		functionType = t2;
+		param = p;
+	}
+	
+	public void display(int depth) {
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println(" ┌<Function>");
+		
+		for (int i = 0; i < depth + 1; i++)
+			System.out.print(" │ ");
+		System.out.println(" Type: " + function.toString() + (functionType == null ? "" : "(" + functionType.toString() + ")"));
+		
+		if (param != null)
+			param.display(depth + 1);
+			
+		for (int i = 0; i < depth; i++)
+			System.out.print(" │ ");
+		System.out.println(" └</Function>");
 	}
 }
 
