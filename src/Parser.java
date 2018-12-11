@@ -305,14 +305,19 @@ public class Parser {
 		if (token.type().equals(TokenType.Identifier)) {
 			// Identifier → Letter { Letter | Digit } [ 📈Digit { Digit }📉 [ 📈Digit { Digit }📉 ] ]
 			String id = match(TokenType.Identifier);
-			Array d1 = null, d2 = null;
+			Expression d1 = null, d2 = null;
 			
-			// 1차원 배열
-			if (token.type().equals(TokenType.LeftBracket))
-				d1 = array();
-			// 2차원 배열
-			if (token.type().equals(TokenType.LeftBracket))
-				d2 = array();
+			// arr[d1][d2]
+			if (token.type().equals(TokenType.LeftBracket)) {
+				match(TokenType.LeftBracket);
+				d1 = expression();
+				match(TokenType.RightBracket);
+			}
+			if (token.type().equals(TokenType.LeftBracket)) {
+				match(TokenType.LeftBracket);
+				d2 = expression();
+				match(TokenType.RightBracket);
+			}
 			
 			e = new Variable(id, d1, d2);
 		} else if (isLiteral()) {
@@ -337,7 +342,7 @@ public class Parser {
 		match(TokenType.LeftBracket);
 		
 		while (!token.type().equals(TokenType.RightBracket)) {
-			arr.list.add(expression());
+			arr.members.add(expression());
 			
 			if (token.type().equals(TokenType.Space))
 				match(TokenType.Space);

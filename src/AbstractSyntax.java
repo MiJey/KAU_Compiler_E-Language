@@ -187,9 +187,13 @@ abstract class Expression {
 
 class Variable extends Expression {
 	private String id;
-	private Array d1, d2;	// 2차원 배열	// TODO Array가 아니라 int임 수정해야함
+	private Expression d1, d2;	// arr[d1][d2]
 	
-	Variable (String name, Array d1, Array d2) { 
+	Variable (String name) {
+		id = name;
+	}
+	
+	Variable (String name, Expression d1, Expression d2) { 
 		id = name;
 		this.d1 = d1;
 		this.d2 = d2;
@@ -198,9 +202,9 @@ class Variable extends Expression {
 	public String toString() { 
 		String result = id;
 		if (d1 != null)
-			result += d1.toString();
+			result += "[" + d1.toString() + "]";
 		if (d2 != null)
-			result += d2.toString();
+			result += "[" + d2.toString() + "]";
 		return result;
 	}
 	
@@ -267,16 +271,16 @@ class Unary extends Expression {
 }
 
 class Array extends Expression {
-	public ArrayList<Expression> list = new ArrayList<Expression>();
+	public ArrayList<Expression> members = new ArrayList<Expression>();
 	
 	public String toString() {
 		String result = "[";
 		
-		for (int i = 0; i < list.size() - 1; i++)
-			result += list.get(i).toString() + ", ";
+		for (int i = 0; i < members.size() - 1; i++)
+			result += members.get(i).toString() + ", ";
 		
-		if (list.size() != 0)
-			result += list.get(list.size() - 1).toString();
+		if (members.size() != 0)
+			result += members.get(members.size() - 1).toString();
 		
 		result += "]";
 		return result;
@@ -287,8 +291,8 @@ class Array extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" ┌<Array>");
 		
-		for (int i = 0; i < list.size(); i++)
-			list.get(i).display(depth + 1);
+		for (int i = 0; i < members.size(); i++)
+			members.get(i).display(depth + 1);
 		
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
