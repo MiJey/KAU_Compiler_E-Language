@@ -13,6 +13,8 @@
 	public static final Token ifTok           = new Token(TokenType.If,           "if", Emoji.ifEmoji.toString());
 	public static final Token elseTok         = new Token(TokenType.Else,         "else", Emoji.elseEmoji.toString());
 	public static final Token whileTok        = new Token(TokenType.While,        "while", Emoji.whileEmoji.toString());
+	public static final Token breakTok        = new Token(TokenType.Break,        "break", Emoji.breakEmoji.toString());
+	public static final Token continueTok     = new Token(TokenType.Continue,     "continue", Emoji.continueEmoji.toString());
 
 	public static final Token orTok           = new Token(TokenType.Or,           "||", Emoji.orEmoji.toString());
 	public static final Token andTok          = new Token(TokenType.And,          "&&", Emoji.andEmoji.toString());
@@ -31,6 +33,7 @@
 	public static final Token minusTok        = new Token(TokenType.Minus,        "-", Emoji.minusEmoji.toString());
 	public static final Token multiplyTok     = new Token(TokenType.Multiply,     "*", Emoji.multiflyEmoji.toString());
 	public static final Token divideTok       = new Token(TokenType.Divide,       "/", Emoji.divideEmoji.toString());
+	public static final Token remainderTok    = new Token(TokenType.Remainder,    "%", Emoji.remainderEmoji.toString());
 	
 	public static final Token leftBracketTok  = new Token(TokenType.LeftBracket,  "[", Emoji.leftbracketEmoji.toString());
 	public static final Token rightBracketTok = new Token(TokenType.RightBracket, "]", Emoji.rightbracketEmoji.toString());
@@ -38,10 +41,13 @@
 	public static final Token rightParenTok   = new Token(TokenType.RightParen,   ")", Emoji.rightparenEmoji.toString());
     
 	public static final Token printTok        = new Token(TokenType.Print,        "print", Emoji.printEmoji.toString());
-	public static final Token scanTok         = new Token(TokenType.Scan,         "scan", Emoji.scanEmoji.toString());
+	public static final Token inputTok        = new Token(TokenType.Input,        "input", Emoji.inputEmoji.toString());
 	public static final Token randomTok       = new Token(TokenType.Random,       "random", Emoji.randomEmoji.toString());
 	public static final Token timeTok         = new Token(TokenType.Time,         "time", Emoji.timeEmoji.toString());
 
+	public static final Token intTypeTok      = new Token(TokenType.IntType,      "int()", Emoji.intTypeEmoji.toString());
+	public static final Token floatTypeTok    = new Token(TokenType.FloatType,    "float()", Emoji.floatTypeEmoji.toString());
+	
 	private static EmojiHelper emojiHelper = new EmojiHelper();
 	
 	private TokenType type;

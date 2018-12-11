@@ -80,22 +80,41 @@ class Assignment extends Statement {
 
 class Function extends Statement {
 	TokenType function;
-	Expression domain;
+	TokenType functionType = null;
+	Expression param = null;
 	int depth;
 	
-	Function (int d, TokenType t, Expression e) {
+	// time
+	Function (int d, TokenType t) {
 		depth = d;
 		function = t;
-		domain = e;
+	}
+	
+	// print, input, random
+	Function (int d, TokenType t, Expression p) {
+		depth = d;
+		function = t;
+		param = p;
+	}
+	
+	// int(input), float(input)
+	Function (int d, TokenType t, TokenType t2, Expression p) {
+		depth = d;
+		function = t;
+		functionType = t2;
+		param = p;
 	}
 	
 	public void display() {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
-		System.out.println(" ┌<Function type=\"" + function.toString() + "\">");
+		System.out.println(" ┌<Function type=\"" + function.toString()
+		                                          + (functionType == null ? "" : ": " + functionType.toString())
+		                                          + "\">");
 		
-		domain.display(depth + 1);
-		
+		if (param != null)
+			param.display(depth + 1);
+			
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" └</Function>");
@@ -104,7 +123,7 @@ class Function extends Statement {
 
 class Conditional extends Statement {
 	Expression condition;
-	Block thenBranch, elseBranch;
+	Block thenBranch, elseBranch = null;
 	int depth;
 	
 	Conditional (int d, Expression e, Block tb) {
@@ -127,7 +146,7 @@ class Conditional extends Statement {
 		
 		condition.display(depth + 1);
 		thenBranch.display();
-		elseBranch.display();
+		if (elseBranch != null) elseBranch.display();
 		
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
@@ -168,7 +187,7 @@ abstract class Expression {
 
 class Variable extends Expression {
 	private String id;
-	private Array d1, d2;	// 2차원 배열
+	private Array d1, d2;	// 2차원 배열	// TODO Array가 아니라 int임 수정해야함
 	
 	Variable (String name, Array d1, Array d2) { 
 		id = name;

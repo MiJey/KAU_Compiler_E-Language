@@ -47,7 +47,7 @@ public class Parser {
 		return prog;
 	}
 
-	// Block → { [TAB] Statement }
+	// Block → { Statement }
 	private Block block(int depth) {
 		Block b = new Block(depth);
 		
@@ -88,25 +88,49 @@ public class Parser {
 		return new Assignment(depth, target, source);
 	}
 	
-	// Function → ( 📺 | 🎹  | 🎲  | ⏰ ) Expression NEWLINE
+	// Function → ( 📺 | 🎹 | 🎹🦄 | 🎹🦊 | 🎲 ) Expression NEWLINE
 	private Function function(int depth) {
-		TokenType t = token.type();
-	
-		if (t.equals(TokenType.Print))
+		if (token.type().equals(TokenType.Time)) {
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Time);	// time(): 파라미터가 0개
+		} else if (token.type().equals(TokenType.Print)) {
 			match(TokenType.Print);
-		else if (t.equals(TokenType.Scan))
-			match(TokenType.Scan);
-		else if (t.equals(TokenType.Random))
-			match(TokenType.Random);
-		else if (t.equals(TokenType.Time))
-			match(TokenType.Time);
-		else
-			error("Invalid function.");
+			Expression param = expression();
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Print, param);	// print(a): 파라미터가 1개
+		} else if (token.type().equals(TokenType.Input)) {
+			match(TokenType.Input);
+			
+			if (token.type().equals(TokenType.IntType)) {
+				match(TokenType.IntType);
+				Expression param = expression();
+				match(TokenType.Newline);
+				return new Function(depth, TokenType.Input, TokenType.IntType, param);	// a = int(input()): 파라미터가 2개
+			} else if (token.type().equals(TokenType.FloatType)) {
+				match(TokenType.FloatType);
+				Expression param = expression();
+				match(TokenType.Newline);
+				return new Function(depth, TokenType.Input, TokenType.FloatType, param);	// a = float(input()): 파라미터가 2개
+			}
+			
+			Expression param = expression();
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Input, param);	// a = input(): 파라미터가 1개
+		}
+		// 파라미터가 2개인 함수: int(input), float(input)
+		if (token.type().equals(TokenType.Input)) {
+			match(TokenType.Input);
+			
+			if (token.type().equals(TokenType.IntType)) {
+				match(TokenType.IntType);
+				Expression param = expression();
+				match(TokenType.Newline);
+				return new Function(depth, TokenType.Input, TokenType.IntType, param);
+			}
+		}
 		
-		Expression domain = expression();
-		match(TokenType.Newline);
-		
-		return new Function(depth, t, domain);
+		error("Invalid function.");
+		return null;
 	}
 
 	// IfStatement →
@@ -161,7 +185,7 @@ public class Parser {
 	
 	private boolean isFunction() {
 		if (token.type().equals(TokenType.Print)
-			|| token.type().equals(TokenType.Scan)
+			|| token.type().equals(TokenType.Input)
 			|| token.type().equals(TokenType.Random)
 			|| token.type().equals(TokenType.Time))
 			return true;
@@ -208,7 +232,7 @@ public class Parser {
 		return term1;
 	}
 	
-	// Equality → Relation [ ( ⚖️ | 🥜⚖️ ) Relation ]
+	// Equality → Relation { ( ⚖️ | 🥜⚖️ ) Relation }
 	private Expression equality() {
 
 		Expression term1 = relation();
@@ -222,7 +246,7 @@ public class Parser {
 		return term1;
 	}
 	
-	// Relation → Addition [ ( 💁 | 💁⚖️ | 🙋 | 🙋⚖️ ) Addition ]
+	// Relation → Addition { ( 💁 | 💁⚖️ | 🙋 | 🙋⚖️ ) Addition }
 	private Expression relation() {
 
 		Expression term1 = addition();
@@ -250,11 +274,12 @@ public class Parser {
 		return term1;
 	}
 	
-	// Term → Factor { ( 🐇 | ✂️ ) Factor }
+	// Term → Factor { ( 🐇 | ✂️ | 🎳 ) Factor }
 	private Expression term() {
 		Expression term1 = factor();
 		while (token.type().equals(TokenType.Multiply)
-			|| token.type().equals(TokenType.Divide)) {
+			|| token.type().equals(TokenType.Divide)
+			|| token.type().equals(TokenType.Remainder)) {
 			Operator op = new Operator(match(token.type()));
 			Expression term2 = factor();
 			term1 = new Binary(op, term1, term2);
@@ -278,7 +303,7 @@ public class Parser {
 		Expression e = null;
 		
 		if (token.type().equals(TokenType.Identifier)) {
-			// Identifier → Letter { Letter | Digit } [ Array [ Array ] ]
+			// Identifier → Letter { Letter | Digit } [ 📈Digit { Digit }📉 [ 📈Digit { Digit }📉 ] ]
 			String id = match(TokenType.Identifier);
 			Array d1 = null, d2 = null;
 			

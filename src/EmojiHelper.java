@@ -6,11 +6,12 @@ public class EmojiHelper {
 			Emoji.eof, Emoji.space, Emoji.tab, Emoji.newline,
 			
 			// 키워드
-			Emoji.ifEmoji, Emoji.elseEmoji, Emoji.whileEmoji, Emoji.assignEmoji,
+			Emoji.assignEmoji, Emoji.ifEmoji, Emoji.elseEmoji, Emoji.whileEmoji, Emoji.breakEmoji, Emoji.continueEmoji,
 			Emoji.orEmoji, Emoji.andEmoji, Emoji.notEmoji, Emoji.equalsEmoji, Emoji.lessEmoji, Emoji.greaterEmoji,
 			Emoji.charEmoji, Emoji.stringEmoji, Emoji.trueEmoji, Emoji.falseEmoji,
-			Emoji.plusEmoji, Emoji.minusEmoji, Emoji.multiflyEmoji, Emoji.divideEmoji,
-			Emoji.printEmoji, Emoji.scanEmoji, Emoji.randomEmoji, Emoji.timeEmoji,
+			Emoji.plusEmoji, Emoji.minusEmoji, Emoji.multiflyEmoji, Emoji.divideEmoji, Emoji.remainderEmoji,
+			Emoji.printEmoji, Emoji.inputEmoji, Emoji.randomEmoji, Emoji.timeEmoji,
+			Emoji.intTypeEmoji, Emoji.floatTypeEmoji,
 			
 			// 아스키
 			Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
@@ -124,49 +125,6 @@ public class EmojiHelper {
 		}
 	}
 	
-	/*
-	public int parseInt(String emojiString) {
-		String result = "";
-		
-		while (emojiString.length() != 0) {
-			if (emojiString.startsWith(Emoji.zero.toString())) result += "0";
-			else if (emojiString.startsWith(Emoji.one.toString())) result += "1";
-			else if (emojiString.startsWith(Emoji.two.toString())) result += "2";
-			else if (emojiString.startsWith(Emoji.three.toString())) result += "3";
-			else if (emojiString.startsWith(Emoji.four.toString())) result += "4";
-			else if (emojiString.startsWith(Emoji.five.toString())) result += "5";
-			else if (emojiString.startsWith(Emoji.six.toString())) result += "6";
-			else if (emojiString.startsWith(Emoji.seven.toString())) result += "7";
-			else if (emojiString.startsWith(Emoji.eight.toString())) result += "8";
-			else if (emojiString.startsWith(Emoji.nine.toString())) result += "9";
-			
-			emojiString = emojiString.substring(2);
-		}
-		
-		return Integer.parseInt(result);
-	}
-	
-	public boolean parseBool(String emojiString) {
-		if (emojiString.equals(Emoji.trueEmoji.toString()))
-			return true;
-		else if (emojiString.equals(Emoji.falseEmoji.toString()))
-			return false;
-		
-		System.err.println(emojiString);
-		System.err.printf("EmojiHelper: parseBool: Can not convert.");
-		System.exit(1);
-		
-		return false;
-	}
-	
-	public char parseChar(String emojiString) {
-		return 'a';
-	}
-	
-	public float parseFloat(String emojiString) {
-		return 0.0f;
-	}
-	*/
 	public String parseString(String emojiString) {
 		String result = "";
 		while (emojiString.length() > 0) {
@@ -180,14 +138,14 @@ public class EmojiHelper {
 			for (int i = 0; i < letters.length; i++) {
 				if (letters[i].toString().equals(getFirstEmoji(emojiString))) {
 					result += ascii_letters.substring(i, i+1);
-					emojiString = emojiString.substring(asciiSymbols[i].toString().length());
+					emojiString = emojiString.substring(letters[i].toString().length());
 				}
 			}
 
 			for (int i = 0; i < digits.length; i++) {
 				if (digits[i].toString().equals(getFirstEmoji(emojiString))) {
 					result += ascii_digits.substring(i, i+1);
-					emojiString = emojiString.substring(asciiSymbols[i].toString().length());
+					emojiString = emojiString.substring(digits[i].toString().length());
 				}
 			}
 		}

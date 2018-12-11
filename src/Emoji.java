@@ -22,6 +22,8 @@ public class Emoji {
 	public static final Emoji ifEmoji        = new Emoji("\uD83E\uDD14", new int[] { 0xD83E, 0xDD14 }); // 🤔
 	public static final Emoji elseEmoji      = new Emoji("\uD83D\uDE1E", new int[] { 0xD83D, 0xDE1E }); // 😞
 	public static final Emoji whileEmoji     = new Emoji("\u267B\uFE0F", new int[] { 0x267B, 0xFE0F }); // ♻️
+	public static final Emoji breakEmoji     = new Emoji("\uD83D\uDCA3", new int[] { 0xD83D, 0xDCA3 }); // 🥌
+	public static final Emoji continueEmoji  = new Emoji("\uD83C\uDFA1", new int[] { 0xD83C, 0xDFA1 }); // 🎡
 	
 	public static final Emoji orEmoji        = new Emoji("\uD83E\uDD37", new int[] { 0xD83E, 0xDD37 }); // 🤷
 	public static final Emoji andEmoji       = new Emoji("\uD83D\uDC6B", new int[] { 0xD83D, 0xDC6B }); // 👫
@@ -40,12 +42,16 @@ public class Emoji {
 	public static final Emoji minusEmoji     = new Emoji("\u2796",       new int[] { 0x2796 });         // ➖
 	public static final Emoji multiflyEmoji  = new Emoji("\uD83D\uDC07", new int[] { 0xD83D, 0xDC07 }); // 🐇
 	public static final Emoji divideEmoji    = new Emoji("\u2702",       new int[] { 0x2702 });         // ✂️
+	public static final Emoji remainderEmoji = new Emoji("\uD83C\uDFB3", new int[] { 0xD83C, 0xDFB3 }); // 🎳
 	
 	public static final Emoji printEmoji     = new Emoji("\uD83D\uDCFA", new int[] { 0xD83D, 0xDCFA });	// 📺
-	public static final Emoji scanEmoji      = new Emoji("\uD83C\uDFB9", new int[] { 0xD83C, 0xDFB9 });	// 🎹
+	public static final Emoji inputEmoji     = new Emoji("\uD83C\uDFB9", new int[] { 0xD83C, 0xDFB9 });	// 🎹
 	public static final Emoji randomEmoji    = new Emoji("\uD83C\uDFB2", new int[] { 0xD83C, 0xDFB2 });	// 🎲
 	public static final Emoji timeEmoji      = new Emoji("\u23F0",       new int[] { 0x23F0 });	        // ⏰
 	
+	public static final Emoji intTypeEmoji    = new Emoji("\uD83E\uDD84", new int[] { 0xD83E, 0xDD84 }); // 🦄
+	public static final Emoji floatTypeEmoji  = new Emoji("\uD83E\uDD8A", new int[] { 0xD83E, 0xDD8A }); // 🦊
+
 	// ASCII Codes(키워드로 쓰이는 경우 뒤에 Emoji를 붙힘)
 	// ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` { | } ~
 	public static final Emoji exclamation       = new Emoji("\u2757\uFE0F", new int[] { 0x2757, 0xFE0F }); // ❗️

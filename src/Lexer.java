@@ -16,10 +16,7 @@ public class Lexer {
 	private BufferedReader input;
 	private EmojiHelper emojiHelper = new EmojiHelper();
 
-	private final int NUL = 0x0000;	// 널
-	private final int SP  = 0x0020;	// 공백
 	private final int EOF = 0x0004;	// 파일 끝
-	private final int TAB = 0x0009;	// 탭
 	private final int LF  = 0x000A;	// 개행
 	private final int BOM = 0xFEFF;	// 해당 텍스트가 유니코드임을 나타내는 문자이며, 옵션이므로 모든 유니코드 텍스트에서 나타나는 것은 아님
 	
@@ -245,6 +242,9 @@ public class Lexer {
 			} else if (emo == Emoji.divideEmoji) {
 				nextEmoji();
 				return Token.divideTok;
+			} else if (emo == Emoji.remainderEmoji) {
+				nextEmoji();
+				return Token.remainderTok;
 			}
 
 			// 괄호
@@ -266,15 +266,24 @@ public class Lexer {
 			if (emo == Emoji.printEmoji) {
 				nextEmoji();
 				return Token.printTok;
-			} else if (emo == Emoji.scanEmoji) {
+			} else if (emo == Emoji.inputEmoji) {
 				nextEmoji();
-				return Token.scanTok;
+				return Token.inputTok;
 			} else if (emo == Emoji.randomEmoji) {
 				nextEmoji();
 				return Token.randomTok;
 			} else if (emo == Emoji.timeEmoji) {
 				nextEmoji();
 				return Token.timeTok;
+			}
+			
+			// Input 함수 타입
+			if (emo == Emoji.intTypeEmoji) {
+				nextEmoji();
+				return Token.intTypeTok;
+			} else if (emo == Emoji.floatTypeEmoji) {
+				nextEmoji();
+				return Token.floatTypeTok;
 			}
 			
 			// String
