@@ -90,15 +90,16 @@ public class Parser {
 	
 	// Function → ( 📺 | 🎹 | 🎹🦄 | 🎹🦊 | 🎲 ) Expression NEWLINE
 	private Function function(int depth) {
-		if (token.type().equals(TokenType.Time)) {
-			match(TokenType.Newline);
-			return new Function(depth, TokenType.Time);	// time(): 파라미터가 0개
-		} else if (token.type().equals(TokenType.Print)) {
+		// Print
+		if (token.type().equals(TokenType.Print)) {
 			match(TokenType.Print);
 			Expression param = expression();
 			match(TokenType.Newline);
 			return new Function(depth, TokenType.Print, param);	// print(a): 파라미터가 1개
-		} else if (token.type().equals(TokenType.Input)) {
+		}
+		
+		// Input
+		if (token.type().equals(TokenType.Input)) {
 			match(TokenType.Input);
 			
 			if (token.type().equals(TokenType.IntType)) {
@@ -117,16 +118,34 @@ public class Parser {
 			match(TokenType.Newline);
 			return new Function(depth, TokenType.Input, param);	// a = input(): 파라미터가 1개
 		}
-		// 파라미터가 2개인 함수: int(input), float(input)
-		if (token.type().equals(TokenType.Input)) {
-			match(TokenType.Input);
-			
-			if (token.type().equals(TokenType.IntType)) {
-				match(TokenType.IntType);
-				Expression param = expression();
-				match(TokenType.Newline);
-				return new Function(depth, TokenType.Input, TokenType.IntType, param);
-			}
+		
+		// Random
+		if (token.type().equals(TokenType.Random)) {
+			match(TokenType.Random);
+			Expression param = expression();
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Random, param);
+		}
+		
+		// Time
+		if (token.type().equals(TokenType.Time)) {
+			match(TokenType.Time);
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Time);
+		}
+		
+		// Break
+		if (token.type().equals(TokenType.Break)) {
+			match(TokenType.Break);
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Break);
+		}
+		
+		// Continue
+		if (token.type().equals(TokenType.Continue)) {
+			match(TokenType.Continue);
+			match(TokenType.Newline);
+			return new Function(depth, TokenType.Continue);
 		}
 		
 		error("Invalid function.");
@@ -187,7 +206,9 @@ public class Parser {
 		if (token.type().equals(TokenType.Print)
 			|| token.type().equals(TokenType.Input)
 			|| token.type().equals(TokenType.Random)
-			|| token.type().equals(TokenType.Time))
+			|| token.type().equals(TokenType.Time)
+			|| token.type().equals(TokenType.Break)
+			|| token.type().equals(TokenType.Continue))
 			return true;
 		return false;
 	}

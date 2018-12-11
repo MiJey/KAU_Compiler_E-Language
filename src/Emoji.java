@@ -22,7 +22,7 @@ public class Emoji {
 	public static final Emoji ifEmoji        = new Emoji("\uD83E\uDD14", new int[] { 0xD83E, 0xDD14 }); // 🤔
 	public static final Emoji elseEmoji      = new Emoji("\uD83D\uDE1E", new int[] { 0xD83D, 0xDE1E }); // 😞
 	public static final Emoji whileEmoji     = new Emoji("\u267B\uFE0F", new int[] { 0x267B, 0xFE0F }); // ♻️
-	public static final Emoji breakEmoji     = new Emoji("\uD83D\uDCA3", new int[] { 0xD83D, 0xDCA3 }); // 🥌
+	public static final Emoji breakEmoji     = new Emoji("\uD83D\uDCA3", new int[] { 0xD83D, 0xDCA3 }); // 💣
 	public static final Emoji continueEmoji  = new Emoji("\uD83C\uDFA1", new int[] { 0xD83C, 0xDFA1 }); // 🎡
 	
 	public static final Emoji orEmoji        = new Emoji("\uD83E\uDD37", new int[] { 0xD83E, 0xDD37 }); // 🤷
@@ -32,8 +32,8 @@ public class Emoji {
 	public static final Emoji greaterEmoji   = new Emoji("\uD83D\uDE4B", new int[] { 0xD83D, 0xDE4B }); // 🙋 >
 	public static final Emoji lessEmoji      = new Emoji("\uD83D\uDC81", new int[] { 0xD83D, 0xDC81 }); // 💁 <
 	
-	public static final Emoji charEmoji      = new Emoji("\uD83D\uDCCE", new int[] { 0xD83D, 0xDCCE }); // 📎
-	public static final Emoji stringEmoji    = new Emoji("\uD83D\uDD87", new int[] { 0xD83D, 0xDD87 }); // 🖇
+	public static final Emoji charEmoji      = new Emoji("\uD83D\uDE97", new int[] { 0xD83D, 0xDE97 }); // 🚗
+	public static final Emoji stringEmoji    = new Emoji("\uD83D\uDE82", new int[] { 0xD83D, 0xDE82 }); // 🚂
 	
 	public static final Emoji trueEmoji      = new Emoji("\uD83D\uDE46", new int[] { 0xD83D, 0xDE46 }); // 🙆
 	public static final Emoji falseEmoji     = new Emoji("\uD83D\uDE45", new int[] { 0xD83D, 0xDE45 }); // 🙅

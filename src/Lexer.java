@@ -120,14 +120,22 @@ public class Lexer {
 		return r;
 	}
 	
-	public String concatString() {
-		String r = "";
+	// 연속되는 아스키 문자열 찾기(String)
+	public String concatAscii() {
+		if (emo != Emoji.stringEmoji)
+			error("Illigal character: expecting: \"; saw: " + emo.toString());
 		nextEmoji();	// get "
-		while (emo != Emoji.stringEmoji) {
+		
+		String r = "";
+		do {
 			r += emo;
 			nextEmoji();
-		}
+		} while (emojiHelper.isAscii(emo));
+		
+		if (emo != Emoji.stringEmoji)
+			error("Illigal character: expecting: \"; saw: " + emo.toString());
 		nextEmoji();	// get "
+		
 		return r;
 	}
 	
@@ -185,6 +193,14 @@ public class Lexer {
 			} else if (emo == Emoji.whileEmoji) {
 				nextEmoji();
 				return Token.whileTok;
+			}
+			
+			if (emo == Emoji.breakEmoji) {
+				nextEmoji();
+				return Token.breakTok;
+			} else if (emo == Emoji.continueEmoji) {
+				nextEmoji();
+				return Token.continueTok;
 			}
 			
 			// 논리연산
@@ -288,7 +304,7 @@ public class Lexer {
 			
 			// String
 			if (emo == Emoji.stringEmoji)
-				return Token.mkStringLiteral(concatString());
+				return Token.mkStringLiteral(concatAscii());
 			
 			// Char
 			if (emo == Emoji.charEmoji) {
