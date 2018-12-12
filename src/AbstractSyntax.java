@@ -12,6 +12,14 @@ class Program {
 		body.display();
 		System.out.println("</Program>");
 	}
+	
+	//Program 클래스의 toPython 함수는 전체 프로그램을 파이썬 소스로 고쳐준다.
+	public void toPython() {
+
+		System.out.println("from random import *"); 
+		//randint()함수를 사용하는 키워드가 있으므로 random을 import해준다.
+		body.toPython();
+	}
 }
 
 //------------------------------------------------------------
@@ -19,6 +27,8 @@ class Program {
 abstract class Statement {
 	int depth;
 	public void display() {}
+	//statement를 Python으로 고치기 위하여 toPython()함수는 필수적이다.
+	abstract public void toPython();
 }
 
 class Block extends Statement {
@@ -32,12 +42,20 @@ class Block extends Statement {
 			System.out.print(" │ ");
 		System.out.println(" ┌<Block>");
 		
-		for (int i = 0; i < members.size(); i++)
+		for (int i = 0; i < members.size(); i++) {
 			members.get(i).display();
-		
+//			System.out.print(members.get(i).);
+		}
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" └</Block>");
+	}
+	
+	// Block은 파이썬에서 따로 표시되지 않고 다른 Statement들의 집합을 차례대로 출력해주는 역할.
+	public void toPython() {
+		for (int i = 0; i < members.size(); i++) {
+			members.get(i).toPython();
+		}
 	}
 }
 
@@ -51,6 +69,14 @@ class Skip extends Statement {
 			System.out.print(" │ ");
 		System.out.println("  <Skip>");
 	}
+	
+	//skip도 하나의 statement이므로 파이썬으로 변환해준다.
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		System.out.println("");
+	}
+
 }
 
 class Assignment extends Statement {
@@ -76,6 +102,20 @@ class Assignment extends Statement {
 			System.out.print(" │ ");
 		System.out.println(" └</Assignment>");
 	}
+	
+	
+	public void toPython() {
+		//들여쓰기 맞춰주는 부분
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		
+		//대입문이므로 target = source 순으로 출력해준다.
+		target.toPython(depth + 1);
+		System.out.print(" = ");
+		source.toPython(depth + 1);
+		System.out.println("");
+	}
+	
 }
 
 class FunctionStatement extends Statement {
@@ -98,6 +138,16 @@ class FunctionStatement extends Statement {
 			System.out.print(" │ ");
 		System.out.println(" └</FunctionStatement>");
 	}
+	
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		//functionstate 하위의function을 출력한다.
+		function.toPython(depth + 1);
+		
+		System.out.println("");
+	}
+
 }
 
 class Conditional extends Statement {
@@ -131,6 +181,30 @@ class Conditional extends Statement {
 			System.out.print(" │ ");
 		System.out.println(" └</Conditional>");
 	}
+    
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		//if문도 순서대로 출력한다.
+		System.out.print("if(");
+		condition.toPython(depth + 1);
+		System.out.println("):");
+		
+		thenBranch.toPython();
+		if (elseBranch != null) {
+			System.out.print("else:");
+			
+			elseBranch.toPython();
+			System.out.println("");
+			
+		}
+		
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+//		System.out.println(" └</Conditional>");
+	}
+
+
 }
 
 class Loop extends Statement {
@@ -156,6 +230,18 @@ class Loop extends Statement {
 			System.out.print(" │ ");
 		System.out.println(" └</Loop>");
 	}
+	
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+
+		//while문도 순서대로 출력한다.
+		System.out.print("while(");
+		condition.toPython(depth + 1);
+		System.out.println("):");
+		block.toPython();
+	}
+	
 }
 
 class BreakStatement extends Statement {
@@ -168,6 +254,14 @@ class BreakStatement extends Statement {
 			System.out.print(" │ ");
 		System.out.println("  <BreakStatement>");
 	}
+	
+	//e-lang에서는 break문도 하나의 statement로 취금한다.
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		System.out.println(" break");
+	}
+
 }
 
 class ContinueStatement extends Statement {
@@ -180,12 +274,22 @@ class ContinueStatement extends Statement {
 			System.out.print(" │ ");
 		System.out.println("  <ContinueStatement>");
 	}
+
+	//continue도 break와 같이 statement로 취급한다.
+	public void toPython() {
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+		System.out.println("  continue");
+	}
+
 }
 
 //------------------------------------------------------------
 
 abstract class Expression {
 	public void display(int depth) {}
+	abstract public void toPython(int depth);
+	
 }
 
 class Variable extends Expression {
@@ -223,6 +327,12 @@ class Variable extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" Variable: " + toString());
 	}
+	//lexical level은 대부분 간단하게 출력만 해 주면 된다.
+	public void toPython(int depth) {
+		System.out.print(toString()); //변수명만 출력
+	}
+	
+	
 }
 
 class Binary extends Expression {
@@ -248,6 +358,16 @@ class Binary extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" └</Binary>");
 	}
+	//binary를 문법 순서에 맞게 출력해준다.
+	public void toPython(int depth) {
+		term1.toPython(depth + 1);
+		op.toPython(depth + 1);
+		term2.toPython(depth + 1);
+		
+	}
+
+
+
 }
 
 class Unary extends Expression {
@@ -271,6 +391,16 @@ class Unary extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" └</Unary>");
 	}
+	//unary또한 순서대로 출력
+	public void toPython(int depth) {
+		
+		op.toPython(depth + 1);
+		term.toPython(depth + 1);
+		
+		for (int i = 0; i < depth; i++)
+			System.out.print("    ");
+	}
+	
 }
 
 class Array extends Expression {
@@ -301,6 +431,18 @@ class Array extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" └</Array>");
 	}
+	
+	public void toPython(int depth) {
+		//Python의 리스트는 대괄호로 묶으므로 대괄호를 열고 순서대로 만든다.
+		System.out.print("[");
+		members.get(0).toPython(depth + 1);
+		for (int i = 1; i < members.size(); i++) {
+			System.out.print(", ");			
+			members.get(i).toPython(depth + 1);
+		}
+		System.out.print("]");
+	}
+	
 }
 
 class Function extends Expression {
@@ -342,10 +484,46 @@ class Function extends Expression {
 			System.out.print(" │ ");
 		System.out.println(" └</Function>");
 	}
+	
+	public void toPython(int depth) {
+		//e-lang에서 제공하는 키워드함수는 상황에따라 적절히 파이썬으로 변환해주어야한다.
+		//print키워드는 print함수를 이용한다.
+		if(function == TokenType.Print) {
+			System.out.print("print(");
+			if (param != null)
+				param.toPython(depth + 1);
+			System.out.print(")");
+		}
+		
+		//input키워드는 input함수를 이용하되 위치와 뒤따르는 키워드에 따라 매핑 방식이 달라진다.
+		if(function == TokenType.Input) {
+			if (param != null)
+				param.toPython(depth + 1);
+			if(functionType == TokenType.IntType)
+				System.out.print(" = int(input())");
+			else if(functionType == TokenType.FloatType)
+				System.out.print("= float(input())");
+			else
+				System.out.print("= input()");
+		}
+		//random 키워드도 사용하는 위치나 뒤따르는 키워드에 따라서 매핑 방식이 달라진다.
+		if(function == TokenType.Random) {
+			if (param != null) {
+				System.out.print("randint(0,");
+				param.toPython(depth + 1);
+				System.out.print(")");
+			}else {
+				System.out.print("randint(0,100)");
+			}
+		}
+			
+		
+	}
 }
 
-//------------------------------------------------------------
 
+//------------------------------------------------------------
+//lexical level은 간단하게 출력만 해 준다.
 abstract class Value extends Expression {
 	// int, bool, char, float, string
 	protected Type type;
@@ -412,6 +590,15 @@ class IntValue extends Value {
 			System.out.print(" │ ");
 		System.out.println(" IntValue: " + value);
 	}
+
+	public void toPython(int depth) {
+//		for (int i = 0; i < depth; i++)
+//			System.out.print("    ");
+		System.out.print(value);
+	}
+
+
+
 }
 
 class BoolValue extends Value {
@@ -439,6 +626,16 @@ class BoolValue extends Value {
 			System.out.print(" │ ");
 		System.out.println(" BoolValue: " + value);
 	}
+	
+	public void toPython(int depth) {
+//		for (int i = 0; i < depth; i++)
+//			System.out.print(" │ ");
+		if(value) {
+			System.out.print("True");
+		}else {
+			System.out.print("False");
+		}
+	}
 }
 
 class CharValue extends Value {
@@ -461,6 +658,14 @@ class CharValue extends Value {
 			System.out.print(" │ ");
 		System.out.println(" CharValue: " + value);
 	}
+
+	public void toPython(int depth) {
+//		for (int i = 0; i < depth; i++)
+//			System.out.print(" │ ");
+		System.out.print("'" + value + "'");
+	}
+
+
 }
 
 class FloatValue extends Value {
@@ -483,6 +688,14 @@ class FloatValue extends Value {
 			System.out.print(" │ ");
 		System.out.println(" FloatValue: " + value);
 	}
+	
+	public void toPython(int depth) {
+//		for (int i = 0; i < depth; i++)
+//			System.out.print(" │ ");
+		System.out.print(value);
+	}
+
+	
 }
 
 class StringValue extends Value {
@@ -505,6 +718,14 @@ class StringValue extends Value {
 			System.out.print(" │ ");
 		System.out.println(" StringValue: " + value);
 	}
+
+	public void toPython(int depth) {
+//		for (int i = 0; i < depth; i++)
+//			System.out.print(" │ ");
+		System.out.print("'" + value + "'");
+	}
+
+
 }
 
 class Type {
@@ -530,5 +751,9 @@ class Operator {
 		for (int i = 0; i < depth; i++)
 			System.out.print(" │ ");
 		System.out.println(" Operator: " + val);
+	}
+	
+	public void toPython(int depth) {
+		System.out.print(val);
 	}
 }

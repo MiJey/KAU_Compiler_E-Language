@@ -2,57 +2,55 @@
 public class EmojiHelper {
 	// 이모지 전체(next를 제외한 특수 이모지 포함)
 	private static Emoji[] emojies = new Emoji[] {
-		// 공백
-		Emoji.eof, Emoji.space, Emoji.tab, Emoji.newline,
-		
-		// 키워드
-		Emoji.assignEmoji, Emoji.ifEmoji, Emoji.elseEmoji, Emoji.whileEmoji, Emoji.breakEmoji, Emoji.continueEmoji,
-		Emoji.orEmoji, Emoji.andEmoji, Emoji.notEmoji, Emoji.equalsEmoji, Emoji.lessEmoji, Emoji.greaterEmoji,
-		Emoji.charEmoji, Emoji.stringEmoji, Emoji.trueEmoji, Emoji.falseEmoji,
-		Emoji.plusEmoji, Emoji.minusEmoji, Emoji.multiflyEmoji, Emoji.divideEmoji, Emoji.remainderEmoji,
-		Emoji.printEmoji, Emoji.inputEmoji, Emoji.randomEmoji, Emoji.timeEmoji,
-		Emoji.intTypeEmoji, Emoji.floatTypeEmoji,
-		
-		// 아스키
-		Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
-		Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
-		Emoji.slash, Emoji.colon, Emoji.semicolon, Emoji.lessthan, Emoji.equal, Emoji.greaterthan, Emoji.question, Emoji.at,
-		Emoji.leftbracketEmoji, Emoji.backslash, Emoji.rightbracketEmoji, Emoji.caret, Emoji.underscore, Emoji.accent,
-		Emoji.leftbrace, Emoji.verticalbar, Emoji.rightbrace, Emoji.tilde,
-		
-		Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine,
-		
-		Emoji.a, Emoji.b, Emoji.c, Emoji.d, Emoji.e, Emoji.f, Emoji.g, Emoji.h, Emoji.i, Emoji.j, Emoji.k, Emoji.l, Emoji.m,
-		Emoji.n, Emoji.o, Emoji.p, Emoji.q, Emoji.r, Emoji.s, Emoji.t, Emoji.u, Emoji.v, Emoji.w, Emoji.x, Emoji.y, Emoji.z,
-		
-		Emoji.A, Emoji.B, Emoji.C, Emoji.D, Emoji.E, Emoji.F, Emoji.G, Emoji.H, Emoji.I, Emoji.J, Emoji.K, Emoji.L, Emoji.M,
-		Emoji.N, Emoji.O, Emoji.P, Emoji.Q, Emoji.R, Emoji.S, Emoji.T, Emoji.U, Emoji.V, Emoji.W, Emoji.X, Emoji.Y, Emoji.Z
+			// 공백
+			Emoji.eof, Emoji.space, Emoji.tab, Emoji.newline,
+			
+			// 키워드
+			Emoji.assignEmoji, Emoji.ifEmoji, Emoji.elseEmoji, Emoji.whileEmoji, Emoji.breakEmoji, Emoji.continueEmoji,
+			Emoji.orEmoji, Emoji.andEmoji, Emoji.notEmoji, Emoji.equalsEmoji, Emoji.lessEmoji, Emoji.greaterEmoji,
+			Emoji.charEmoji, Emoji.stringEmoji, Emoji.trueEmoji, Emoji.falseEmoji,
+			Emoji.plusEmoji, Emoji.minusEmoji, Emoji.multiflyEmoji, Emoji.divideEmoji, Emoji.remainderEmoji,
+			Emoji.printEmoji, Emoji.inputEmoji, Emoji.randomEmoji, Emoji.timeEmoji,
+			Emoji.intTypeEmoji, Emoji.floatTypeEmoji,
+			
+			// 아스키
+			Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
+			Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
+			Emoji.slash, Emoji.colon, Emoji.semicolon, Emoji.lessthan, Emoji.equal, Emoji.greaterthan, Emoji.question, Emoji.at,
+			Emoji.leftbracketEmoji, Emoji.backslash, Emoji.rightbracketEmoji, Emoji.caret, Emoji.underscore, Emoji.accent,
+			Emoji.leftbrace, Emoji.verticalbar, Emoji.rightbrace, Emoji.tilde,
+			
+			Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine,
+			
+			Emoji.a, Emoji.b, Emoji.c, Emoji.d, Emoji.e, Emoji.f, Emoji.g, Emoji.h, Emoji.i, Emoji.j, Emoji.k, Emoji.l, Emoji.m,
+			Emoji.n, Emoji.o, Emoji.p, Emoji.q, Emoji.r, Emoji.s, Emoji.t, Emoji.u, Emoji.v, Emoji.w, Emoji.x, Emoji.y, Emoji.z,
+			
+			Emoji.A, Emoji.B, Emoji.C, Emoji.D, Emoji.E, Emoji.F, Emoji.G, Emoji.H, Emoji.I, Emoji.J, Emoji.K, Emoji.L, Emoji.M,
+			Emoji.N, Emoji.O, Emoji.P, Emoji.Q, Emoji.R, Emoji.S, Emoji.T, Emoji.U, Emoji.V, Emoji.W, Emoji.X, Emoji.Y, Emoji.Z
 	};
 	
 	// 아스키 출력 문자 중 특수 기호만
 	private static Emoji[] asciiSymbols = new Emoji[] {
-		Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
-		Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
-		Emoji.slash, Emoji.colon, Emoji.semicolon, Emoji.lessthan, Emoji.equal, Emoji.greaterthan, Emoji.question, Emoji.at,
-		Emoji.leftbracketEmoji, Emoji.backslash, Emoji.rightbracketEmoji, Emoji.caret, Emoji.underscore, Emoji.accent,
-		Emoji.leftbrace, Emoji.verticalbar, Emoji.rightbrace, Emoji.tilde
+			Emoji.exclamation, Emoji.quotation, Emoji.hashtag, Emoji.dollar, Emoji.percent, Emoji.ampersand, Emoji.apostrophe,
+			Emoji.leftparenEmoji, Emoji.rightparenEmoji, Emoji.asterisk, Emoji.plus, Emoji.comma, Emoji.hyphen, Emoji.periodEmoji,
+			Emoji.slash, Emoji.colon, Emoji.semicolon, Emoji.lessthan, Emoji.equal, Emoji.greaterthan, Emoji.question, Emoji.at,
+			Emoji.leftbracketEmoji, Emoji.backslash, Emoji.rightbracketEmoji, Emoji.caret, Emoji.underscore, Emoji.accent,
+			Emoji.leftbrace, Emoji.verticalbar, Emoji.rightbrace, Emoji.tilde
 	};
 	
-	// 아스키 출력 문자 중 알파벳만
 	private static Emoji[] letters = new Emoji[] {
-		Emoji.a, Emoji.b, Emoji.c, Emoji.d, Emoji.e, Emoji.f, Emoji.g, Emoji.h, Emoji.i, Emoji.j, Emoji.k, Emoji.l, Emoji.m,
-		Emoji.n, Emoji.o, Emoji.p, Emoji.q, Emoji.r, Emoji.s, Emoji.t, Emoji.u, Emoji.v, Emoji.w, Emoji.x, Emoji.y, Emoji.z,
-		
-		Emoji.A, Emoji.B, Emoji.C, Emoji.D, Emoji.E, Emoji.F, Emoji.G, Emoji.H, Emoji.I, Emoji.J, Emoji.K, Emoji.L, Emoji.M,
-		Emoji.N, Emoji.O, Emoji.P, Emoji.Q, Emoji.R, Emoji.S, Emoji.T, Emoji.U, Emoji.V, Emoji.W, Emoji.X, Emoji.Y, Emoji.Z
+			Emoji.a, Emoji.b, Emoji.c, Emoji.d, Emoji.e, Emoji.f, Emoji.g, Emoji.h, Emoji.i, Emoji.j, Emoji.k, Emoji.l, Emoji.m,
+			Emoji.n, Emoji.o, Emoji.p, Emoji.q, Emoji.r, Emoji.s, Emoji.t, Emoji.u, Emoji.v, Emoji.w, Emoji.x, Emoji.y, Emoji.z,
+			
+			Emoji.A, Emoji.B, Emoji.C, Emoji.D, Emoji.E, Emoji.F, Emoji.G, Emoji.H, Emoji.I, Emoji.J, Emoji.K, Emoji.L, Emoji.M,
+			Emoji.N, Emoji.O, Emoji.P, Emoji.Q, Emoji.R, Emoji.S, Emoji.T, Emoji.U, Emoji.V, Emoji.W, Emoji.X, Emoji.Y, Emoji.Z
 	};
 	
-	// 아스키 출력 문자 중 숫자만
 	private static Emoji[] digits = new Emoji[] {
-		Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine
+			Emoji.zero, Emoji.one, Emoji.two, Emoji.three, Emoji.four, Emoji.five, Emoji.six, Emoji.seven, Emoji.eight, Emoji.nine
 	};
 	
-	// 위에 있는 아스키 출력 문자 Emoji 배열과 같은 순서인 문자열
+	// 위 Emoji 배열과 같은 순서
 	private static String ascii_symbols = "!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~";
 	private static String ascii_letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	private static String ascii_digits = "0123456789";

@@ -20,15 +20,13 @@ public class Lexer {
 	private final int LF  = 0x000A;	// 개행
 	private final int BOM = 0xFEFF;	// 해당 텍스트가 유니코드임을 나타내는 문자이며, 옵션이므로 모든 유니코드 텍스트에서 나타나는 것은 아님
 	
+	private int unicodes[] = new int[] {};
+	private int uni = 0;
+	private Emoji emo = Emoji.next;	// 초기값으로 다음 문자를 읽으라는 의미의 특수 이모지
 	private String line = "";
 	private int lineno = 0;
 	private int col = 1;
-	
-	private int uni = 0;
-	private int unicodes[] = new int[] {};
-	
-	private Emoji emo = Emoji.next;	// 초기값으로 다음 문자를 읽으라는 의미의 특수 이모지
-	
+
 	public Lexer (String fileName) {
 		try {
 			input = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF-8"));
@@ -162,6 +160,7 @@ public class Lexer {
 			}
 			
 			if (emo == Emoji.newline) {
+				// System.out.println(Token.newlineTok.toString());
 				nextEmoji();
 				return Token.newlineTok;
 			}

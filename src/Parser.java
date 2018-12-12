@@ -385,6 +385,18 @@ public class Parser {
 			return new Function(TokenType.Time);
 		}
 		
+		// Break
+		if (token.type().equals(TokenType.Break)) {
+			match(TokenType.Break);
+			return new Function(TokenType.Break);
+		}
+		
+		// Continue
+		if (token.type().equals(TokenType.Continue)) {
+			match(TokenType.Continue);
+			return new Function(TokenType.Continue);
+		}
+		
 		error("Invalid function.");
 		return null;
 	}
