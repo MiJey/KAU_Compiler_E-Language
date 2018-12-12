@@ -2,7 +2,6 @@
 
 	private static final int KEYWORDS = TokenType.Eof.ordinal();
 	private static final String[] reserved = new String[KEYWORDS];
-	// private static Token[] tokens = new Token[KEYWORDS];
 	
 	public static final Token eofTok          = new Token(TokenType.Eof,          Emoji.eof.toString(), Emoji.eof.toString());
 	public static final Token spaceTok        = new Token(TokenType.Space,        Emoji.space.toString(), Emoji.space.toString());
@@ -51,8 +50,8 @@
 	private static EmojiHelper emojiHelper = new EmojiHelper();
 	
 	private TokenType type;
-	private String value = "";	// abc
-	private String emoji = "";	// 🍏🍌🥕
+	private String value = "";	// 출력용(마음대로 바꿔도 됨)
+	private String emoji = "";	// 입력용(E-Language 문법에 맞아야 함)
 	
 	private Token(TokenType t, String v, String e) {
 		type = t;
@@ -62,7 +61,6 @@
 		if (t.compareTo(TokenType.Eof) < 0) {
 			int ti = t.ordinal();
 			reserved[ti] = v;
-			// tokens[ti] = this;
 		}
 	}
 

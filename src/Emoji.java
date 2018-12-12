@@ -41,7 +41,7 @@ public class Emoji {
 	public static final Emoji plusEmoji      = new Emoji("\u2795",       new int[] { 0x2795 });         // ➕
 	public static final Emoji minusEmoji     = new Emoji("\u2796",       new int[] { 0x2796 });         // ➖
 	public static final Emoji multiflyEmoji  = new Emoji("\uD83D\uDC07", new int[] { 0xD83D, 0xDC07 }); // 🐇
-	public static final Emoji divideEmoji    = new Emoji("\u2702",       new int[] { 0x2702 });         // ✂️
+	public static final Emoji divideEmoji    = new Emoji("\u2702\uFE0F", new int[] { 0x2702, 0xFE0F }); // ✂️
 	public static final Emoji remainderEmoji = new Emoji("\uD83C\uDFB3", new int[] { 0xD83C, 0xDFB3 }); // 🎳
 	
 	public static final Emoji printEmoji     = new Emoji("\uD83D\uDCFA", new int[] { 0xD83D, 0xDCFA });	// 📺
