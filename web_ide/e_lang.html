@@ -1,0 +1,109 @@
+<!doctype html>
+<system.webServer>
+<httpProtocol>
+  <customHeaders>
+    <add name="Access-Control-Allow-Origin" value="*" />
+    <add name="Access-Control-Allow-Methods" value="GET, POST" />
+  </customHeaders>
+</httpProtocol>
+<link rel="stylesheet" href="e_lang.css?ver=4">
+<script type="text/javascript" src="e_lang.js?ver=6"></script>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>E-language</title>
+  </head>
+  <body>
+    <div id="topbar">
+      <h1 id="title">E-lang&nbsp;IDE</h1>
+      <button>File</button>
+      <button>Edit</button>
+      <button>Help</button>
+      <div id="startbtn" class="btn"><button>▶</button></div>
+    </div>
+    <table id="frame" width="100%">
+      <tr>
+        <td width=100%;><span class="boxTitle">&nbsp;text view&nbsp;</span><div class="view"><p id="text"></p></div>
+        </td>
+        <!--td><span class="boxTitle">&nbsp;console&nbsp;</span><div class="view"><p id="console"></p></div></td-->
+      </tr>
+      <tr>
+        <th id="template" colspan="2">
+          <div class="keyboard">
+              <button id="`" name="192" class="btn">`</button>
+              <button id="🕐" name="49" value="\uD83D\uDD50"\uD83D\uDD50"" class="btn">🕐</button>
+              <button id="🕑" name="50" value="\uD83D\uDD51" class="btn">🕑</button>
+              <button id="🕒" name="51" value="\uD83D\uDD52" class="btn">🕒</button>
+              <button id="🕓" name="52" value="\uD83D\uDD53" class="btn">🕓</button>
+              <button id="🕔" name="53" value="\uD83D\uDD54" class="btn">🕔</button>
+              <button id="🕕" name="54" value="\uD83D\uDD55" class="btn">🕕</button>
+              <button id="🕖" name="55" value="\uD83D\uDD56" class="btn">🕖</button>
+              <button id="🕗" name="56" value="\uD83D\uDD57" class="btn">🕗</button>
+              <button id="🕘" name="57" value="\uD83D\uDD58" class="btn">🕘</button>
+              <button id="🕛" name="48" value="\uD83D\uDD5B" class="btn">🕛</button>
+              <button id='➖' name="189" value="\u2796" class="btn">➖</button>
+              <button id="➕" name="187" value="\u2795" class="btn">➕</button>
+              <button id="₩" name="48" value="" class="btn">₩</button>
+              <button id="<-" name="8" value="" class="btn"><-</button></div>
+
+          <div class="keyboard">
+              <button id="tab" name="9" class="btn">Tab</button>
+              <button id="👸" name="81" value="\uD83D\uDC78" class="btn">👸</button>
+              <button id="🌏" name="87" value="\uD83C\uDF0F" class="btn">🌏</button>
+              <button id="🐘" name="69" value="\uD83D\uDC18" class="btn">🐘</button>
+              <button id="🌈" name="82" value="\uD83C\uDF08" class="btn">🌈</button>
+              <button id="⏰" name="84" value="\u23F0" class="btn">⏰</button>
+              <button id="🎲" name="89" value="\uD83C\uDFB2" class="btn">🎲</button>
+              <button id="📺" name="85" value="\uD83D\uDCFA" class="btn">📺</button>
+              <button id="🎹" name="73" value="\uD83C\uDFB9" class="btn">🎹</button>
+              <button id="🦄" name="79" value="\uD83E\uDD84" class="btn">🦄</button>
+              <button id="🦊" name="80" value="\uD83E\uDD8A" class="btn">🦊</button>
+              <button id="📈" name="219" value="\uD83D\uDCC8" class="btn">📈</button>
+              <button id="📉" name="221" value="\uD83D\uDCC9" class="btn">📉</button>
+              <button id="👠" name="220" value="\uD83D\uDC60" class="btn">👠</button>
+          </div>
+          <div class="keyboard">
+              <button id="capslock" name="20" class="btn">CapsLock</button>
+              <button id="⚖️" name="65" value="\u2696\uFE0F" class="btn">⚖️</button>
+              <button id="🥜" name="83" value="\uD83E\uDD5C" class="btn">🥜</button>
+              <button id="🙋" name="68" value="\uD83D\uDE4B" class="btn">🙋</button>
+              <button id="💁" name="70" value="\uD83D\uDC81" class="btn">💁</button>
+              <button id="🙆" name="71" value="\uD83D\uDE46" class="btn">🙆</button>
+              <button id="🙅" name="72" value="\uD83D\uDE45" class="btn">🙅</button>
+              <button id="🐇" name="74" value="\uD83D\uDC07" class="btn">🐇</button>
+              <button id="✂️" name="75" value="\u2702" class="btn">✂️</button>
+              <button id="🎳" name="76" value="\uD83C\uDFB3" class="btn">🎳</button>
+              <button id="🚂" name="59" value="\uD83D\uDE82" class="btn">🚂</button>
+              <button id="🚗" name="222" value="\uD83D\uDE97" class="btn">🚗</button>
+              <button id="enter" name="13" class="btn">Enter</button>
+          </div>
+          <div class="keyboard">
+              <button id="👈" name="16" value="\uD83D\uDC48" class="btn">👈</button>
+              <button id="♻️" name="90" value="\u267B\uFE0F" class="btn">♻️</button>
+              <button id="🤔" name="88" value="\uD83E\uDD14" class="btn">🤔</button>
+              <button id="😞" name="67" value="\uD83D\uDE1E" class="btn">😞</button>
+              <button id="👫" name="86" value="\uD83D\uDC6B" class="btn">👫</button>
+              <button id="🤷" name="66" value="\uD83E\uDD37" class="btn">🤷</button>
+              <button id="🎡" name="78" value="\uD83C\uDFA1" class="btn">🎡</button>
+              <button id="💣" name="77" value="\uD83D\uDCA3" class="btn">💣</button>
+              <button id="👆" name="188" value="\uD83D\uDC46" class="btn">👆</button>
+              <button id="🌐" name="190" value="\uD83C\uDF10" class="btn">🌐</button>
+              <button id="🖋" name="191" value="\uD83D\uDD8B" class="btn">🖋</button>
+              <button id="👈" name="16" value="\uD83D\uDC48" class="btn">👈</button>
+          </div>
+          <div class="keyboard">
+              <button id="Ctr" class="btn">Ctr</button>
+              <button id="Fn" class="btn">Fn</button>
+              <button id="wid" class="btn">Win</button>
+              <button id="art" class="btn">Art</button>
+              <button id="space" name="32" class="btn">Space bar</button>
+              <button id="art" class="btn">Art</button>
+              <button id="wid" class="btn">Win</button>
+              <button id="한자" class="btn">한자</button>
+              <button id="ctr" class="btn">Ctr</button>
+          </div>
+        </th>
+      </tr>
+    </table>
+  </body>
+</html>
